@@ -62,3 +62,19 @@ export interface NaskahBab {
   status: string;
   tahap_produksi?: 'naskah' | 'storyboard' | 'inking' | 'coloring' | 'selesai';
 }
+
+export interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  order_index: number;
+}
+
+export interface PublicCreator {
+  id: string;
+  nama_pena: string;
+  role: string;
+  bio?: string;
+  avatar_url?: string;
+  order_index: number;
+}

@@ -22,7 +22,8 @@ export default function HomePage() {
   const [totalBab, setTotalBab] = useState(120);
   const [totalPembaca, setTotalPembaca] = useState(50);
   const [loading, setLoading] = useState(true);
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [openFaq, setOpenFaq] = useState<string | null>(null);
+  const [faqs, setFaqs] = useState<any[]>([]);
 
   const { scrollYProgress } = useScroll();
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
@@ -40,18 +41,37 @@ export default function HomePage() {
 
       if (!mangaError) setMangas(mangaData || []);
 
-      // 2. Ambil profil tim
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*');
+      // 2. Ambil profil tim publik
+      const { data: creatorData, error: creatorError } = await supabase
+        .from('public_creators')
+        .select('*')
+        .order('order_index', { ascending: true });
 
-      if (profileError || !profileData || profileData.length === 0) {
+      if (creatorError || !creatorData || creatorData.length === 0) {
         setTeamMembers([
           { nama_pena: 'Ferry', role: 'Founder / Lead Artist', avatar_url: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=200&h=200&fit=crop' },
           { nama_pena: 'Kirei', role: 'Co-Founder / Main Writer', avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&h=200&fit=crop' }
         ]);
       } else {
-        setTeamMembers(profileData);
+        setTeamMembers(creatorData);
+      }
+
+      // 2.5 Ambil FAQs
+      const { data: faqData } = await supabase
+        .from('faqs')
+        .select('*')
+        .order('order_index', { ascending: true });
+      
+      if (faqData && faqData.length > 0) {
+        setFaqs(faqData);
+        setOpenFaq(faqData[0].id);
+      } else {
+        setFaqs([
+          { id: '1', question: "Kapan jadwal update bab komik baru?", answer: "Jadwal update kami bergantung pada skala produksi tiap judul. Namun umumnya, judul aktif akan mendapatkan update 1 bab baru setiap bulannya." },
+          { id: '2', question: "Apakah MangaStudio menerima komisi ilustrasi?", answer: "Ya! Kami sangat terbuka untuk kerja sama B2B, komisi pembuatan webtoon, promosi produk via komik, atau desain karakter game." },
+          { id: '3', question: "Di mana saya bisa membaca komik-komik buatan studio ini?", answer: "Mayoritas karya kami dipublikasikan secara resmi di platform Webtoon Canvas atau platform partner lainnya. Kamu bisa klik tombol 'Baca di Webtoon' pada setiap detail komik." }
+        ]);
+        setOpenFaq('1');
       }
 
       // 3. Ambil setting studio
@@ -91,12 +111,6 @@ export default function HomePage() {
   const heroMangas = featuredMangas.length > 0 ? featuredMangas : mangas.slice(0, 3);
   const shonenMangas = mangas.filter(m => m.target_pasar === 'shonen');
   const shojoMangas = mangas.filter(m => m.target_pasar === 'shojo');
-
-  const faqs = [
-    { q: "Kapan jadwal update bab komik baru?", a: "Jadwal update kami bergantung pada skala produksi tiap judul. Namun umumnya, judul aktif akan mendapatkan update 1 bab baru setiap bulannya." },
-    { q: "Apakah MangaStudio menerima komisi ilustrasi?", a: "Ya! Kami sangat terbuka untuk kerja sama B2B, komisi pembuatan webtoon, promosi produk via komik, atau desain karakter game." },
-    { q: "Di mana saya bisa membaca komik-komik buatan studio ini?", a: "Mayoritas karya kami dipublikasikan secara resmi di platform Webtoon Canvas atau platform partner lainnya. Kamu bisa klik tombol 'Baca di Webtoon' pada setiap detail komik." }
-  ];
 
   return (
     <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-yellow-400 selection:text-black pb-0">
@@ -318,7 +332,7 @@ export default function HomePage() {
             <div className="space-y-4">
               {faqs.map((faq, idx) => (
                 <motion.div
-                  key={idx}
+                  key={faq.id || idx}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -326,17 +340,17 @@ export default function HomePage() {
                   className="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden transition-all duration-300"
                 >
                   <button
-                    onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                    onClick={() => setOpenFaq(openFaq === faq.id ? null : faq.id)}
                     className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
                   >
-                    <span className="font-bold text-white text-lg">{faq.q}</span>
-                    <ChevronDown className={`w-5 h-5 text-yellow-400 transition-transform duration-300 shrink-0 ${openFaq === idx ? 'rotate-180' : ''}`} />
+                    <span className="font-bold text-white text-lg">{faq.question || faq.q}</span>
+                    <ChevronDown className={`w-5 h-5 text-yellow-400 transition-transform duration-300 shrink-0 ${openFaq === faq.id ? 'rotate-180' : ''}`} />
                   </button>
                   <div
-                    className={`transition-all duration-300 ease-in-out overflow-hidden ${openFaq === idx ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                    className={`transition-all duration-300 ease-in-out overflow-hidden ${openFaq === faq.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
                   >
                     <div className="px-6 pb-6 text-gray-400 leading-relaxed">
-                      {faq.a}
+                      {faq.answer || faq.a}
                     </div>
                   </div>
                 </motion.div>

@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AdminSidebar } from '../../components/admin/AdminSidebar';
-import { LayoutTemplate, Upload, Image as ImageIcon, Check } from 'lucide-react';
+import { LayoutTemplate, Upload, Image as ImageIcon, Check, HelpCircle, Users, Settings as SettingsIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
+import { LandingFAQTab } from '../../components/admin/LandingFAQTab';
+import { LandingTeamTab } from '../../components/admin/LandingTeamTab';
+
+type Tab = 'general' | 'faq' | 'team';
 
 export default function LandingSettingsPage() {
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<Tab>('general');
   
   // States
   const [totalBab, setTotalBab] = useState('120');
@@ -135,11 +140,35 @@ export default function LandingSettingsPage() {
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-fit">
-            <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
-              <LayoutTemplate className="w-5 h-5 text-indigo-600" />
-              <h2 className="text-lg font-bold text-gray-900">Konten Landing Page</h2>
+            <div className="flex border-b border-gray-100 bg-gray-50/50">
+              <button
+                onClick={() => setActiveTab('general')}
+                className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors ${
+                  activeTab === 'general' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50'
+                }`}
+              >
+                <SettingsIcon className="w-4 h-4" /> Pengaturan Umum
+              </button>
+              <button
+                onClick={() => setActiveTab('faq')}
+                className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors ${
+                  activeTab === 'faq' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50'
+                }`}
+              >
+                <HelpCircle className="w-4 h-4" /> Manajemen FAQ
+              </button>
+              <button
+                onClick={() => setActiveTab('team')}
+                className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors ${
+                  activeTab === 'team' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50'
+                }`}
+              >
+                <Users className="w-4 h-4" /> Manajemen Tim
+              </button>
             </div>
-            <form onSubmit={handleSaveSettings} className="p-6 space-y-8">
+
+            {activeTab === 'general' && (
+              <form onSubmit={handleSaveSettings} className="p-6 space-y-8">
               
               {/* Statistik Section */}
               <div>
@@ -279,6 +308,10 @@ export default function LandingSettingsPage() {
                 </button>
               </div>
             </form>
+            )}
+
+            {activeTab === 'faq' && <LandingFAQTab />}
+            {activeTab === 'team' && <LandingTeamTab />}
           </div>
 
         </div>
