@@ -11,6 +11,7 @@ interface OnlineUser {
   nama_pena: string;
   avatar_url: string;
   bio_singkat?: string;
+  role?: string;
 }
 
 export function AdminSidebar() {
@@ -30,6 +31,7 @@ export function AdminSidebar() {
       const userName = user.user_metadata?.nama_pena || user.email?.split('@')[0] || 'Admin';
       const userAvatar = user.user_metadata?.avatar_url || '';
       const userBio = user.user_metadata?.bio || '';
+      const userRole = user.user_metadata?.role || 'Tim Kolaborator';
 
       channel = supabase.channel('admin_room', {
         config: {
@@ -50,6 +52,7 @@ export function AdminSidebar() {
               nama_pena: state[id][0].name,
               avatar_url: state[id][0].avatar,
               bio_singkat: state[id][0].bio,
+              role: state[id][0].role || 'Tim Kolaborator',
             });
           }
         }
@@ -63,6 +66,7 @@ export function AdminSidebar() {
             name: userName,
             avatar: userAvatar,
             bio: userBio,
+            role: userRole,
             online_at: new Date().toISOString(),
           });
         }
@@ -183,28 +187,39 @@ export function AdminSidebar() {
         {/* Online Users Widget */}
         <div>
           <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Tim Online ({onlineUsers.length})</h3>
-          <div className="space-y-1">
-            {onlineUsers.map(u => (
-              <div 
-                key={u.id} 
-                onClick={() => setSelectedUser(u)}
-                className="flex items-center gap-3 p-2 -mx-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors group"
-              >
-                <div className="relative shrink-0">
-                  {u.avatar_url ? (
-                    <img src={u.avatar_url} alt={u.nama_pena} className="w-8 h-8 rounded-full object-cover border border-white/10" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-gray-800 border border-white/10 flex items-center justify-center text-gray-400">
-                      <UserIcon className="w-4 h-4" />
-                    </div>
-                  )}
-                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-[#0a0a0a]"></div>
+          <div className="space-y-4">
+            {/* Group users by role */}
+            {Array.from(new Set(onlineUsers.map(u => u.role))).map(roleGroup => {
+              const usersInRole = onlineUsers.filter(u => u.role === roleGroup);
+              return (
+                <div key={roleGroup || 'Unknown'}>
+                  <h4 className="text-[9px] font-bold text-indigo-400/80 uppercase tracking-widest mb-2 px-1">{roleGroup} — {usersInRole.length}</h4>
+                  <div className="space-y-1">
+                    {usersInRole.map(u => (
+                      <div 
+                        key={u.id} 
+                        onClick={() => setSelectedUser(u)}
+                        className="flex items-center gap-3 p-2 -mx-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors group"
+                      >
+                        <div className="relative shrink-0">
+                          {u.avatar_url ? (
+                            <img src={u.avatar_url} alt={u.nama_pena} className="w-8 h-8 rounded-full object-cover border border-white/10" />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full bg-gray-800 border border-white/10 flex items-center justify-center text-gray-400">
+                              <UserIcon className="w-4 h-4" />
+                            </div>
+                          )}
+                          <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-[#0a0a0a]"></div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-300 truncate group-hover:text-white transition-colors" title={u.nama_pena}>{u.nama_pena}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-300 truncate group-hover:text-white transition-colors" title={u.nama_pena}>{u.nama_pena}</p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
             
             {onlineUsers.length === 0 && (
               <p className="text-xs text-gray-500 p-2 -mx-2">Memuat...</p>
@@ -235,7 +250,7 @@ export function AdminSidebar() {
               )}
             </div>
             <h3 className="text-xl font-bold text-gray-900">{selectedUser.nama_pena}</h3>
-            <p className="text-xs font-bold text-indigo-600 mt-1 uppercase tracking-widest">Tim Kolaborator</p>
+            <p className="text-xs font-bold text-indigo-600 mt-1 uppercase tracking-widest">{selectedUser.role || 'Tim Kolaborator'}</p>
             
             <div className="mt-6 pt-6 border-t border-gray-100 text-left">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Bio Singkat</p>
