@@ -4,6 +4,8 @@ import { supabase } from '../../lib/supabase';
 import { PublicNavbar } from '../../components/public/PublicNavbar';
 import { HeroCarousel } from '../../components/public/HeroCarousel';
 import { MangaRow } from '../../components/public/MangaRow';
+import { SEO } from '../../components/SEO';
+import { motion } from 'motion/react';
 
 export default function HomePage() {
   const [mangas, setMangas] = useState<ProjectManga[]>([]);
@@ -67,6 +69,7 @@ export default function HomePage() {
   
   return (
     <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-yellow-400 selection:text-black pb-0">
+      <SEO />
       <PublicNavbar />
       
       <main>
@@ -81,7 +84,13 @@ export default function HomePage() {
 
         {/* Tentang Studio */}
         <section id="tentang" className="py-24 relative z-20 bg-black mt-[-100px] sm:mt-[-50px]">
-          <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center space-y-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7 }}
+            className="max-w-4xl mx-auto px-6 lg:px-8 text-center space-y-8"
+          >
             <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight uppercase">
               Lebih Dari Sekadar <span className="text-yellow-400">Cerita</span>
             </h2>
@@ -89,7 +98,7 @@ export default function HomePage() {
               MangaStudio adalah rumah produksi komik independen yang berdedikasi untuk menciptakan kisah-kisah epik dengan standar visual tertinggi. Kami percaya bahwa setiap goresan tinta memiliki kekuatan untuk menginspirasi jutaan pembaca di seluruh dunia.
             </p>
             <div className="w-24 h-1 bg-yellow-400 mx-auto rounded-full mt-8" />
-          </div>
+          </motion.div>
         </section>
 
         {/* Daftar Manga / Karya Kami */}
@@ -112,16 +121,29 @@ export default function HomePage() {
         {/* Tim Kami */}
         <section id="tim" className="py-24 bg-gradient-to-b from-black to-gray-900 border-t border-white/5">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="text-center mb-16">
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7 }}
+              className="text-center mb-16"
+            >
               <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight uppercase mb-4">
                 Dapur <span className="text-yellow-400">Kreatif</span>
               </h2>
               <p className="text-gray-400 text-lg">Orang-orang di balik layar MangaStudio.</p>
-            </div>
+            </motion.div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-2xl mx-auto">
               {teamMembers.map((member, i) => (
-                <div key={i} className="group relative bg-black/50 p-6 rounded-2xl border border-white/10 hover:border-yellow-400/50 transition-colors text-center cursor-default">
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="group relative bg-black/50 p-6 rounded-2xl border border-white/10 hover:border-yellow-400/50 transition-colors text-center cursor-default"
+                >
                   <div className="w-32 h-32 mx-auto bg-gray-800 rounded-full mb-4 overflow-hidden ring-2 ring-transparent group-hover:ring-yellow-400 transition-all p-1 flex items-center justify-center">
                     {member.avatar_url ? (
                       <img src={member.avatar_url} alt={member.nama_pena} className="w-full h-full object-cover rounded-full grayscale group-hover:grayscale-0 transition-all" />
@@ -134,7 +156,7 @@ export default function HomePage() {
                   {member.bio && (
                     <p className="text-xs text-gray-500 mt-3 line-clamp-2">{member.bio}</p>
                   )}
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -143,7 +165,13 @@ export default function HomePage() {
         {/* Contact Us */}
         <section className="py-24 bg-black border-t border-white/5 relative overflow-hidden">
           <div className="absolute inset-0 bg-yellow-400/5 blur-[100px] rounded-full opacity-50 max-w-3xl mx-auto" />
-          <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7 }}
+            className="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10"
+          >
             <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight uppercase mb-6">
               Mari <span className="text-yellow-400">Berkolaborasi</span>
             </h2>
@@ -162,7 +190,7 @@ export default function HomePage() {
             >
               Hubungi Kami
             </a>
-          </div>
+          </motion.div>
         </section>
       </main>
 

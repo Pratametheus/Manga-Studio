@@ -4,6 +4,8 @@ import { supabase } from '../../lib/supabase';
 import { ProjectManga, Character } from '../../types';
 import { PublicNavbar } from '../../components/public/PublicNavbar';
 import { ChevronLeft, ExternalLink, Users, BookOpen, Globe } from 'lucide-react';
+import { SEO } from '../../components/SEO';
+import { motion } from 'motion/react';
 
 export default function MangaDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -62,6 +64,12 @@ export default function MangaDetailPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-yellow-400 selection:text-black">
+      <SEO 
+        title={`${manga.judul} - MangaStudio`}
+        description={manga.logline || `Kenali dunia dan karakter dari komik ${manga.judul}.`}
+        image={manga.cover_url || undefined}
+        url={`https://manga-studio.vercel.app/manga/${manga.id}`}
+      />
       <PublicNavbar />
       
       <main>
@@ -132,7 +140,12 @@ export default function MangaDetailPage() {
           {/* Main Content (Synopsis & World) */}
           <div className="lg:col-span-2 space-y-16">
             {manga.sinopsis_lengkap && (
-              <section>
+              <motion.section
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6 }}
+              >
                 <div className="flex items-center gap-3 mb-6">
                   <BookOpen className="w-6 h-6 text-yellow-400" />
                   <h2 className="text-2xl font-black uppercase tracking-widest">Sinopsis</h2>
@@ -142,11 +155,16 @@ export default function MangaDetailPage() {
                     <p key={idx}>{paragraph}</p>
                   ))}
                 </div>
-              </section>
+              </motion.section>
             )}
 
             {manga.world_building && (
-              <section>
+              <motion.section
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
                 <div className="flex items-center gap-3 mb-6">
                   <Globe className="w-6 h-6 text-yellow-400" />
                   <h2 className="text-2xl font-black uppercase tracking-widest">World Building (Lore)</h2>
@@ -158,7 +176,7 @@ export default function MangaDetailPage() {
                     ))}
                   </div>
                 </div>
-              </section>
+              </motion.section>
             )}
           </div>
 
@@ -171,8 +189,15 @@ export default function MangaDetailPage() {
             
             {characters.length > 0 ? (
               <div className="space-y-6">
-                {characters.map(char => (
-                  <div key={char.id} className="bg-gray-900 rounded-2xl overflow-hidden border border-white/5 hover:border-yellow-400/30 transition-colors group">
+                {characters.map((char, i) => (
+                  <motion.div 
+                    key={char.id} 
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.5, delay: i * 0.1 }}
+                    className="bg-gray-900 rounded-2xl overflow-hidden border border-white/5 hover:border-yellow-400/30 transition-colors group"
+                  >
                     <div className="aspect-square relative overflow-hidden bg-black">
                       {char.desain_visual_path ? (
                         <img 
@@ -214,7 +239,7 @@ export default function MangaDetailPage() {
                         )}
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             ) : (
