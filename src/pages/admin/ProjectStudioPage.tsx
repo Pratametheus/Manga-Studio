@@ -3,16 +3,17 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { ProjectManga } from '../../types';
 import { AdminSidebar } from '../../components/admin/AdminSidebar';
-import { ChevronLeft, Users, LayoutTemplate, Image as ImageIcon, FileText } from 'lucide-react';
+import { ChevronLeft, Users, LayoutTemplate, Image as ImageIcon, FileText, KanbanSquare } from 'lucide-react';
 import { CharacterManager } from '../../components/admin/studio/CharacterManager';
 import { NaskahManager } from '../../components/admin/studio/NaskahManager';
 import { StoryboardManager } from '../../components/admin/studio/StoryboardManager';
 import { ReferenceManager } from '../../components/admin/studio/ReferenceManager';
+import { KanbanManager } from '../../components/admin/studio/KanbanManager';
 
 export default function ProjectStudioPage() {
   const { id } = useParams<{ id: string }>();
   const [manga, setManga] = useState<ProjectManga | null>(null);
-  const [activeTab, setActiveTab] = useState<'naskah' | 'characters' | 'storyboards' | 'references'>('naskah');
+  const [activeTab, setActiveTab] = useState<'naskah' | 'characters' | 'storyboards' | 'references' | 'kanban'>('kanban');
 
   useEffect(() => {
     async function fetchManga() {
@@ -58,6 +59,17 @@ export default function ProjectStudioPage() {
         {/* Studio Tabs */}
         <div className="px-8 pt-6 border-b border-gray-200 bg-white flex-none">
           <div className="flex gap-8 overflow-x-auto">
+            <button
+              onClick={() => setActiveTab('kanban')}
+              className={`pb-4 text-sm font-medium transition-colors border-b-2 flex items-center gap-2 whitespace-nowrap ${
+                activeTab === 'kanban' 
+                  ? 'border-indigo-600 text-indigo-600' 
+                  : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
+              }`}
+            >
+              <KanbanSquare className="w-4 h-4" />
+              Kanban Produksi
+            </button>
             <button
               onClick={() => setActiveTab('naskah')}
               className={`pb-4 text-sm font-medium transition-colors border-b-2 flex items-center gap-2 whitespace-nowrap ${
@@ -107,7 +119,8 @@ export default function ProjectStudioPage() {
 
         {/* Studio Content Area */}
         <div className="flex-1 overflow-auto p-8">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-6xl mx-auto">
+            {activeTab === 'kanban' && <KanbanManager mangaId={manga.id} />}
             {activeTab === 'naskah' && <NaskahManager mangaId={manga.id} />}
             {activeTab === 'characters' && <CharacterManager mangaId={manga.id} />}
             {activeTab === 'storyboards' && <StoryboardManager mangaId={manga.id} />}

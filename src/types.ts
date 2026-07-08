@@ -59,4 +59,5 @@ export interface NaskahBab {
   judul_bab?: string;
   konten: string;
   status: string;
+  tahap_produksi?: 'naskah' | 'storyboard' | 'inking' | 'coloring' | 'selesai';
 }
