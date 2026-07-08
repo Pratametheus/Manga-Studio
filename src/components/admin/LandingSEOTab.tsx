@@ -49,8 +49,10 @@ export function LandingSEOTab() {
       let finalImageUrl = seoImageUrl;
       if (imageFile) {
         const fileExt = imageFile.name.split('.').pop();
-        const fileName = "seo/og-image--.";
-        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, imageFile);
+        const fileName = `seo/og-image-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, imageFile, {
+          upsert: true
+        });
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
         finalImageUrl = data.publicUrl;
