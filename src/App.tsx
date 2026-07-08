@@ -8,6 +8,7 @@ import SetPasswordPage from './pages/auth/SetPasswordPage';
 import DashboardPage from './pages/admin/DashboardPage';
 import ProjectStudioPage from './pages/admin/ProjectStudioPage';
 import SettingsPage from './pages/admin/SettingsPage';
+import LandingSettingsPage from './pages/admin/LandingSettingsPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthInterceptor } from './components/auth/AuthInterceptor';
 
@@ -42,6 +43,11 @@ export default function App() {
         <Route path="/admin/settings" element={
           <ProtectedRoute>
             <SettingsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/landing" element={
+          <ProtectedRoute>
+            <LandingSettingsPage />
           </ProtectedRoute>
         } />
         <Route 

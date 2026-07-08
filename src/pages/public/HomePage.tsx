@@ -19,9 +19,11 @@ export default function HomePage() {
     before: "https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?q=80&w=1974&auto=format&fit=crop",
     after: "https://images.unsplash.com/photo-1578632292335-df3fbc91351e?q=80&w=1974&auto=format&fit=crop"
   });
+  const [totalBab, setTotalBab] = useState(120);
+  const [totalPembaca, setTotalPembaca] = useState(50);
   const [loading, setLoading] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  
+
   const { scrollYProgress } = useScroll();
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, 300]);
@@ -35,14 +37,14 @@ export default function HomePage() {
         .select('*')
         .eq('status', 'published')
         .order('created_at', { ascending: false });
-        
+
       if (!mangaError) setMangas(mangaData || []);
 
       // 2. Ambil profil tim
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*');
-        
+
       if (profileError || !profileData || profileData.length === 0) {
         setTeamMembers([
           { nama_pena: 'Ferry', role: 'Founder / Lead Artist', avatar_url: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=200&h=200&fit=crop' },
@@ -58,7 +60,7 @@ export default function HomePage() {
         .select('*')
         .eq('id', 1)
         .single();
-        
+
       if (studioData) {
         if (studioData.email_kontak) setContactEmail(studioData.email_kontak);
         if (studioData.before_image_url || studioData.after_image_url) {
@@ -67,6 +69,8 @@ export default function HomePage() {
             after: studioData.after_image_url || prev.after
           }));
         }
+        if (studioData.total_bab) setTotalBab(parseInt(studioData.total_bab, 10));
+        if (studioData.total_pembaca) setTotalPembaca(parseInt(studioData.total_pembaca, 10));
       }
 
       setLoading(false);
@@ -93,12 +97,12 @@ export default function HomePage() {
     { q: "Apakah MangaStudio menerima komisi ilustrasi?", a: "Ya! Kami sangat terbuka untuk kerja sama B2B, komisi pembuatan webtoon, promosi produk via komik, atau desain karakter game." },
     { q: "Di mana saya bisa membaca komik-komik buatan studio ini?", a: "Mayoritas karya kami dipublikasikan secara resmi di platform Webtoon Canvas atau platform partner lainnya. Kamu bisa klik tombol 'Baca di Webtoon' pada setiap detail komik." }
   ];
-  
+
   return (
     <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-yellow-400 selection:text-black pb-0">
       <SEO />
       <PublicNavbar />
-      
+
       <main>
         {/* Banner Utama */}
         {heroMangas.length > 0 ? (
@@ -117,7 +121,7 @@ export default function HomePage() {
 
         {/* Tentang Studio */}
         <section id="tentang" className="py-24 relative z-20 bg-black mt-[-100px] sm:mt-[-50px]">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -136,7 +140,7 @@ export default function HomePage() {
           {/* Statistik / Milestone Counter */}
           <div className="max-w-5xl mx-auto px-6 mt-16">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -147,7 +151,7 @@ export default function HomePage() {
                 </div>
                 <div className="text-gray-400 text-sm md:text-base font-bold uppercase tracking-widest">Karya Rilis</div>
               </motion.div>
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -159,7 +163,7 @@ export default function HomePage() {
                 </div>
                 <div className="text-gray-400 text-sm md:text-base font-bold uppercase tracking-widest">Kreator</div>
               </motion.div>
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -167,7 +171,7 @@ export default function HomePage() {
                 className="bg-gray-900/50 p-6 rounded-2xl border border-white/5 text-center"
               >
                 <div className="text-4xl md:text-5xl font-black text-white mb-2">
-                  <Counter end={120} suffix="+" />
+                  <Counter end={totalBab} suffix="+" />
                 </div>
                 <div className="text-gray-400 text-sm md:text-base font-bold uppercase tracking-widest">Total Bab</div>
               </motion.div>
@@ -179,7 +183,7 @@ export default function HomePage() {
                 className="bg-gray-900/50 p-6 rounded-2xl border border-white/5 text-center"
               >
                 <div className="text-4xl md:text-5xl font-black text-white mb-2">
-                  <Counter end={50} suffix="k+" />
+                  <Counter end={totalPembaca} suffix="k+" />
                 </div>
                 <div className="text-gray-400 text-sm md:text-base font-bold uppercase tracking-widest">Pembaca</div>
               </motion.div>
@@ -191,7 +195,7 @@ export default function HomePage() {
         <section className="py-24 bg-gray-900 border-t border-b border-white/5 relative z-10 overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
@@ -205,7 +209,7 @@ export default function HomePage() {
                   Dari Coretan Menjadi <span className="text-yellow-400">Karya Nyata</span>
                 </h2>
                 <p className="text-gray-400 text-lg leading-relaxed mb-8">
-                  Setiap panel yang kamu baca adalah hasil dedikasi tim kami. Kami memastikan standar tertinggi di setiap tahap: mulai dari penyusunan naskah, sketsa storyboard (*name*), eksekusi lineart, hingga sentuhan warna final yang memanjakan mata.
+                  Setiap panel yang kamu baca adalah hasil dedikasi tim kami. Kami memastikan standar tertinggi di setiap tahap mulai dari penyusunan naskah, sketsa storyboard, eksekusi lineart, hingga sentuhan warna final yang memanjakan mata.
                 </p>
                 <div className="grid grid-cols-2 gap-6">
                   <div>
@@ -218,7 +222,7 @@ export default function HomePage() {
                   </div>
                 </div>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -227,9 +231,9 @@ export default function HomePage() {
                 className="relative z-20"
               >
                 <div className="absolute -inset-4 bg-gradient-to-r from-yellow-400/20 to-indigo-500/20 blur-2xl -z-10 rounded-3xl" />
-                <BeforeAfterSlider 
-                  beforeImage={sliderImages.before} 
-                  afterImage={sliderImages.after} 
+                <BeforeAfterSlider
+                  beforeImage={sliderImages.before}
+                  afterImage={sliderImages.after}
                 />
               </motion.div>
             </div>
@@ -241,11 +245,11 @@ export default function HomePage() {
           {mangas.length > 0 && (
             <div className="space-y-12">
               <MangaRow title="Karya Terbaru Kami" mangas={mangas} />
-              
+
               {shonenMangas.length > 0 && (
                 <MangaRow title="Action & Fantasy" mangas={shonenMangas} />
               )}
-              
+
               {shojoMangas.length > 0 && (
                 <MangaRow title="Drama & Romance" mangas={shojoMangas} />
               )}
@@ -256,7 +260,7 @@ export default function HomePage() {
         {/* Tim Kami */}
         <section id="tim" className="py-24 bg-gradient-to-b from-black to-gray-900 border-t border-white/5">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -268,11 +272,11 @@ export default function HomePage() {
               </h2>
               <p className="text-gray-400 text-lg">Orang-orang di balik layar MangaStudio.</p>
             </motion.div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-2xl mx-auto">
               {teamMembers.map((member, i) => (
-                <motion.div 
-                  key={i} 
+                <motion.div
+                  key={i}
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true, margin: "-50px" }}
@@ -300,7 +304,7 @@ export default function HomePage() {
         {/* FAQ Section */}
         <section className="py-24 bg-black relative z-10">
           <div className="max-w-4xl mx-auto px-6 lg:px-8">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -310,10 +314,10 @@ export default function HomePage() {
                 Pertanyaan <span className="text-yellow-400">Umum</span>
               </h2>
             </motion.div>
-            
+
             <div className="space-y-4">
               {faqs.map((faq, idx) => (
-                <motion.div 
+                <motion.div
                   key={idx}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -321,14 +325,14 @@ export default function HomePage() {
                   transition={{ delay: idx * 0.1 }}
                   className="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden transition-all duration-300"
                 >
-                  <button 
+                  <button
                     onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                     className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
                   >
                     <span className="font-bold text-white text-lg">{faq.q}</span>
                     <ChevronDown className={`w-5 h-5 text-yellow-400 transition-transform duration-300 shrink-0 ${openFaq === idx ? 'rotate-180' : ''}`} />
                   </button>
-                  <div 
+                  <div
                     className={`transition-all duration-300 ease-in-out overflow-hidden ${openFaq === idx ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
                   >
                     <div className="px-6 pb-6 text-gray-400 leading-relaxed">
@@ -344,7 +348,7 @@ export default function HomePage() {
         {/* Contact Us */}
         <section className="py-24 bg-black border-t border-white/5 relative overflow-hidden">
           <div className="absolute inset-0 bg-yellow-400/5 blur-[100px] rounded-full opacity-50 max-w-3xl mx-auto" />
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -357,7 +361,7 @@ export default function HomePage() {
             <p className="text-gray-400 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl mx-auto">
               Tertarik untuk bekerja sama, diskusi bisnis, atau sekadar menyapa? Jangan ragu untuk menghubungi kami.
             </p>
-            <a 
+            <a
               href={contactEmail ? `mailto:${contactEmail}` : '#'}
               onClick={(e) => {
                 if (!contactEmail) {

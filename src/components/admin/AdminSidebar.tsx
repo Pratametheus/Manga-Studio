@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { PenTool, LayoutDashboard, Settings, LogOut, Sparkles, Library, User as UserIcon, Menu, X } from 'lucide-react';
+import { PenTool, LayoutDashboard, Settings, LogOut, Sparkles, Library, User as UserIcon, Menu, X, LayoutTemplate } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link, useLocation, NavLink } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 
 import { Modal } from '../ui/Modal';
@@ -152,6 +152,19 @@ export function AdminSidebar() {
             <Library className="w-5 h-5 text-gray-500 group-hover:text-gray-400 transition-colors" />
             Lihat Web Publik
           </Link>
+          <NavLink
+            to="/admin/landing"
+            className={({ isActive }) =>
+              cn(
+                "flex items-center gap-3 px-3 py-2.5 font-medium rounded-lg transition-colors group",
+                isActive ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"
+              )
+            }
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <LayoutTemplate className={cn("w-5 h-5", location.pathname === '/admin/landing' ? "text-indigo-400" : "text-gray-500 group-hover:text-gray-400")} />
+            Landing Page
+          </NavLink>
           <Link 
             to="/admin/settings" 
             className={cn(

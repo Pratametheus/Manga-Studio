@@ -136,68 +136,70 @@ export default function DashboardPage() {
             <div className="px-6 py-5 border-b border-gray-100">
               <h2 className="text-lg font-semibold text-gray-900">Daftar Project Manga</h2>
             </div>
-            <table className="min-w-full divide-y divide-gray-100">
-              <thead className="bg-gray-50/50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Judul Manga</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Target Pasar</th>
-                  <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
-                {projects.map((proj) => (
-                  <tr key={proj.id} className="hover:bg-gray-50/80 transition-colors group">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <Link to={`/admin/project/${proj.id}`} className="block group-hover:opacity-90">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-14 bg-gray-100 rounded-md overflow-hidden shrink-0 border border-gray-200">
-                            {proj.cover_url ? (
-                              <img src={proj.cover_url} alt={proj.judul} className="w-full h-full object-cover" />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
-                                <ImageIcon className="w-5 h-5" />
-                              </div>
-                            )}
-                          </div>
-                          <div>
-                            <div className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">{proj.judul} &rarr;</div>
-                            <div className="text-xs text-gray-500 truncate max-w-[200px] mt-1">{proj.tema || '-'}</div>
-                          </div>
-                        </div>
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={cn(
-                        "px-2.5 py-1 rounded-full text-xs font-medium border",
-                        proj.status === 'published' ? "bg-emerald-50 text-emerald-700 border-emerald-200/60" : "bg-amber-50 text-amber-700 border-amber-200/60"
-                      )}>
-                        {proj.status === 'published' ? 'Published' : 'Draft'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 capitalize font-medium">{proj.target_pasar}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end gap-1 text-gray-400">
-                        <button 
-                          onClick={() => openEditModal(proj)}
-                          className="p-2 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-                          title="Edit Info Manga"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => setMangaToDelete({ id: proj.id, title: proj.judul })}
-                          className="p-2 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Hapus"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-100">
+                <thead className="bg-gray-50/50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Judul Manga</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Target Pasar</th>
+                    <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Aksi</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-100">
+                  {projects.map((proj) => (
+                    <tr key={proj.id} className="hover:bg-gray-50/80 transition-colors group">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Link to={`/admin/project/${proj.id}`} className="block group-hover:opacity-90">
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-14 bg-gray-100 rounded-md overflow-hidden shrink-0 border border-gray-200">
+                              {proj.cover_url ? (
+                                <img src={proj.cover_url} alt={proj.judul} className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
+                                  <ImageIcon className="w-5 h-5" />
+                                </div>
+                              )}
+                            </div>
+                            <div>
+                              <div className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">{proj.judul} &rarr;</div>
+                              <div className="text-xs text-gray-500 truncate max-w-[200px] mt-1">{proj.tema || '-'}</div>
+                            </div>
+                          </div>
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={cn(
+                          "px-2.5 py-1 rounded-full text-xs font-medium border",
+                          proj.status === 'published' ? "bg-emerald-50 text-emerald-700 border-emerald-200/60" : "bg-amber-50 text-amber-700 border-amber-200/60"
+                        )}>
+                          {proj.status === 'published' ? 'Published' : 'Draft'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 capitalize font-medium">{proj.target_pasar}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex justify-end gap-1 text-gray-400">
+                          <button 
+                            onClick={() => openEditModal(proj)}
+                            className="p-2 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                            title="Edit Info Manga"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button 
+                            onClick={() => setMangaToDelete({ id: proj.id, title: proj.judul })}
+                            className="p-2 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Hapus"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             {projects.length === 0 && (
               <div className="p-16 text-center text-gray-500 flex flex-col items-center">
                 <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 ring-1 ring-gray-100">
