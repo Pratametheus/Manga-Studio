@@ -102,7 +102,9 @@ export default function AdminGalleryPage() {
         const watermarkedFile = await applyWatermark(imageFile);
         
         const fileName = `gallery/art-${Math.random().toString(36).substring(2)}-${Date.now()}.jpg`;
-        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, watermarkedFile);
+        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, watermarkedFile, {
+          upsert: true
+        });
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
         finalImageUrl = data.publicUrl;
@@ -131,7 +133,9 @@ export default function AdminGalleryPage() {
         const watermarkedFile = await applyWatermark(imageFile);
         
         const fileName = `gallery/art-${Math.random().toString(36).substring(2)}-${Date.now()}.jpg`;
-        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, watermarkedFile);
+        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, watermarkedFile, {
+          upsert: true
+        });
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
         finalImageUrl = data.publicUrl;
@@ -152,11 +156,20 @@ export default function AdminGalleryPage() {
     }
   }
 
-  async function handleDelete(id: string) {
+  async function handleDelete(art: Artwork) {
     if (!confirm('Yakin ingin menghapus artwork ini dari galeri?')) return;
     const toastId = toast.loading('Menghapus artwork...');
     try {
-      const { error } = await supabase.from('artworks').delete().eq('id', id);
+      // Extract file path from URL
+      if (art.image_url) {
+        const urlParts = art.image_url.split('/manga_assets/');
+        if (urlParts.length === 2) {
+          const filePath = urlParts[1];
+          await supabase.storage.from('manga_assets').remove([filePath]);
+        }
+      }
+
+      const { error } = await supabase.from('artworks').delete().eq('id', art.id);
       if (error) throw error;
       toast.success('Artwork berhasil dihapus', { id: toastId });
       fetchArtworks();
@@ -267,7 +280,7 @@ export default function AdminGalleryPage() {
                     <button onClick={() => startEdit(art)} className="flex-1 flex justify-center items-center gap-1 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-lg text-white text-xs font-medium transition-colors">
                       <Edit2 className="w-3 h-3" /> Edit
                     </button>
-                    <button onClick={() => handleDelete(art.id)} className="p-1.5 bg-red-500/80 hover:bg-red-500 backdrop-blur-md rounded-lg text-white transition-colors">
+                    <button onClick={() => handleDelete(art)} className="p-1.5 bg-red-500/80 hover:bg-red-500 backdrop-blur-md rounded-lg text-white transition-colors">
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
