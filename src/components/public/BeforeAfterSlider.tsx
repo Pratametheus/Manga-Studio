@@ -63,6 +63,11 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
         className="w-full h-auto object-contain pointer-events-none block"
       />
       
+      {/* Overlay Label for Final (right side) - Placed BEFORE the sketch so sketch can cover it */}
+      <div className="absolute top-4 right-4 px-3 py-1 bg-yellow-400/90 backdrop-blur text-black text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-yellow-300">
+        Final Render
+      </div>
+      
       {/* Foreground/Before Image (Sketch) with Clip Path */}
       <div 
         className="absolute inset-0 w-full h-full pointer-events-none"
@@ -77,11 +82,6 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
         <div className="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur text-white text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-white/20">
           Sketsa Kasar
         </div>
-      </div>
-      
-      {/* Overlay Label for Final (right side) */}
-      <div className="absolute top-4 right-4 px-3 py-1 bg-yellow-400/90 backdrop-blur text-black text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-yellow-300">
-        Final Render
       </div>
 
       {/* Slider Handle */}
