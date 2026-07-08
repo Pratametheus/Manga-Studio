@@ -2,14 +2,17 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import HomePage from './pages/public/HomePage';
 import LoginPage from './pages/auth/LoginPage';
+import SetPasswordPage from './pages/auth/SetPasswordPage';
 import DashboardPage from './pages/admin/DashboardPage';
 import ProjectStudioPage from './pages/admin/ProjectStudioPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AuthInterceptor } from './components/auth/AuthInterceptor';
 
 export default function App() {
   return (
     <Router>
+      <AuthInterceptor />
       <Toaster 
         position="bottom-right" 
         toastOptions={{
@@ -25,6 +28,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/set-password" element={<SetPasswordPage />} />
         {/* Protected Admin Routes */}
         <Route path="/admin" element={
           <ProtectedRoute>
