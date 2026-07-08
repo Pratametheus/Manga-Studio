@@ -35,14 +35,11 @@ export function HeroCarousel({ mangas }: HeroCarouselProps) {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.5 }}
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.2}
-          onDragEnd={(e, { offset }) => {
-            if (offset.x < -50) nextSlide();
-            else if (offset.x > 50) prevSlide();
+          onPanEnd={(e, info) => {
+            if (info.offset.x < -50) nextSlide();
+            else if (info.offset.x > 50) prevSlide();
           }}
-          className="absolute inset-0 cursor-grab active:cursor-grabbing"
+          className="absolute inset-0 touch-pan-y"
         >
           {/* Background Cover */}
       <div 
