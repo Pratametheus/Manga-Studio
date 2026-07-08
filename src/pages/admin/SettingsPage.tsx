@@ -30,6 +30,10 @@ export default function SettingsPage() {
   const [xUrl, setXUrl] = useState('');
   const [beforeImageUrl, setBeforeImageUrl] = useState('');
   const [afterImageUrl, setAfterImageUrl] = useState('');
+  const [beforeFile, setBeforeFile] = useState<File | null>(null);
+  const [afterFile, setAfterFile] = useState<File | null>(null);
+  const beforeInputRef = useRef<HTMLInputElement>(null);
+  const afterInputRef = useRef<HTMLInputElement>(null);
   const [savingStudioSettings, setSavingStudioSettings] = useState(false);
 
   useEffect(() => {
@@ -112,6 +116,22 @@ export default function SettingsPage() {
       const file = e.target.files[0];
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleBeforeFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setBeforeFile(file);
+      setBeforeImageUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleAfterFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setAfterFile(file);
+      setAfterImageUrl(URL.createObjectURL(file));
     }
   };
 
@@ -208,13 +228,38 @@ export default function SettingsPage() {
     const toastId = toast.loading('Menyimpan pengaturan studio...');
 
     try {
+      let finalBeforeUrl = beforeImageUrl;
+      let finalAfterUrl = afterImageUrl;
+
+      if (beforeFile) {
+        const fileExt = beforeFile.name.split('.').pop();
+        const fileName = `settings/before-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, beforeFile);
+        if (uploadError) throw uploadError;
+        const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
+        finalBeforeUrl = data.publicUrl;
+        setBeforeImageUrl(data.publicUrl);
+        setBeforeFile(null);
+      }
+
+      if (afterFile) {
+        const fileExt = afterFile.name.split('.').pop();
+        const fileName = `settings/after-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, afterFile);
+        if (uploadError) throw uploadError;
+        const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
+        finalAfterUrl = data.publicUrl;
+        setAfterImageUrl(data.publicUrl);
+        setAfterFile(null);
+      }
+
       const { error } = await supabase.from('studio_settings').upsert({
         id: 1,
         email_kontak: emailKontak,
         instagram_url: instagramUrl,
         x_url: xUrl,
-        before_image_url: beforeImageUrl,
-        after_image_url: afterImageUrl,
+        before_image_url: finalBeforeUrl,
+        after_image_url: finalAfterUrl,
         updated_at: new Date().toISOString()
       });
 
@@ -428,26 +473,97 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100">
+                <div className="grid grid-cols-1 gap-6 pt-4 border-t border-gray-100">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Gambar Slider (Sketsa/Before)</label>
-                    <input
-                      type="url"
-                      value={beforeImageUrl}
-                      onChange={(e) => setBeforeImageUrl(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
-                      placeholder="URL gambar sketsa (opsional)"
-                    />
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Gambar Slider (Sketsa/Before)</label>
+                    <div 
+                      className="flex-1 w-full flex flex-col sm:flex-row items-center gap-4 p-4 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-green-400 transition-all group"
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                          const file = e.dataTransfer.files[0];
+                          if (file.type.startsWith('image/')) {
+                            setBeforeFile(file);
+                            setBeforeImageUrl(URL.createObjectURL(file));
+                          }
+                        }
+                      }}
+                    >
+                      <div className="w-32 h-20 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 relative group">
+                        {beforeImageUrl ? (
+                          <img src={beforeImageUrl} alt="Before" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
+                            <ImageIcon className="w-8 h-8" />
+                          </div>
+                        )}
+                        <div 
+                          onClick={() => beforeInputRef.current?.click()}
+                          className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        >
+                          <Upload className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
+                      <div className="text-center sm:text-left">
+                        <button
+                          type="button"
+                          onClick={() => beforeInputRef.current?.click()}
+                          className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                        >
+                          Upload Gambar Sketsa
+                        </button>
+                        <p className="text-xs text-gray-500 mt-2">Rekomendasi rasio 16:9 (Landscape)</p>
+                      </div>
+                      <input type="file" ref={beforeInputRef} onChange={handleBeforeFileChange} accept="image/*" className="hidden" />
+                    </div>
                   </div>
+
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Gambar Slider (Final/After)</label>
-                    <input
-                      type="url"
-                      value={afterImageUrl}
-                      onChange={(e) => setAfterImageUrl(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
-                      placeholder="URL gambar final (opsional)"
-                    />
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Gambar Slider (Final/After)</label>
+                    <div 
+                      className="flex-1 w-full flex flex-col sm:flex-row items-center gap-4 p-4 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-green-400 transition-all group"
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                          const file = e.dataTransfer.files[0];
+                          if (file.type.startsWith('image/')) {
+                            setAfterFile(file);
+                            setAfterImageUrl(URL.createObjectURL(file));
+                          }
+                        }
+                      }}
+                    >
+                      <div className="w-32 h-20 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 relative group">
+                        {afterImageUrl ? (
+                          <img src={afterImageUrl} alt="After" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
+                            <ImageIcon className="w-8 h-8" />
+                          </div>
+                        )}
+                        <div 
+                          onClick={() => afterInputRef.current?.click()}
+                          className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        >
+                          <Upload className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
+                      <div className="text-center sm:text-left">
+                        <button
+                          type="button"
+                          onClick={() => afterInputRef.current?.click()}
+                          className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                        >
+                          Upload Gambar Final
+                        </button>
+                        <p className="text-xs text-gray-500 mt-2">Rekomendasi rasio 16:9 (Landscape)</p>
+                      </div>
+                      <input type="file" ref={afterInputRef} onChange={handleAfterFileChange} accept="image/*" className="hidden" />
+                    </div>
                   </div>
                 </div>
 
