@@ -80,9 +80,9 @@ export default function DashboardPage() {
   return (
     <div className="flex min-h-screen bg-gray-50/50 font-sans">
       <AdminSidebar />
-      <main className="flex-1 ml-64 p-8 lg:p-10">
+      <main className="flex-1 ml-0 lg:ml-64 px-4 pb-4 pt-20 lg:p-10 w-full min-w-0">
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-10">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-10">
             <div className="flex items-center gap-4">
               <div className="relative flex items-center justify-center w-12 h-12 bg-gray-900 rounded-xl shadow-lg shadow-gray-900/20">
                 <PenTool className="w-6 h-6 text-white" />

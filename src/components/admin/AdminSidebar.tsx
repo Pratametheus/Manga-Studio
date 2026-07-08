@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PenTool, LayoutDashboard, Settings, LogOut, Sparkles, Library, User as UserIcon } from 'lucide-react';
+import { PenTool, LayoutDashboard, Settings, LogOut, Sparkles, Library, User as UserIcon, Menu, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
@@ -18,6 +18,7 @@ export function AdminSidebar() {
   const location = useLocation();
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
   const [selectedUser, setSelectedUser] = useState<OnlineUser | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     let channel: any = null;
@@ -84,8 +85,42 @@ export function AdminSidebar() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  // Tutup menu mobile ketika route berubah
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
   return (
-    <aside className="w-64 bg-[#0a0a0a] border-r border-white/10 flex flex-col h-screen fixed left-0 top-0 overflow-y-auto">
+    <>
+      {/* Mobile Top Bar */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-[#0a0a0a] border-b border-white/10 flex items-center justify-between px-4 z-40">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center w-8 h-8 bg-indigo-500 rounded-lg shrink-0">
+            <PenTool className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-white font-bold tracking-tight">Admin</span>
+        </div>
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 text-gray-400 hover:text-white"
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black/60 z-40 backdrop-blur-sm" 
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={cn(
+        "w-64 bg-[#0a0a0a] border-r border-white/10 flex flex-col h-screen fixed left-0 top-0 overflow-y-auto z-50 transition-transform duration-300",
+        isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      )}>
       <div className="p-6">
         <div className="flex items-center gap-3 mb-8">
           <div className="relative flex items-center justify-center w-10 h-10 bg-indigo-500 rounded-xl shadow-lg shadow-indigo-500/20 shrink-0">
@@ -198,6 +233,6 @@ export function AdminSidebar() {
           </div>
         )}
       </Modal>
-    </aside>
+    </>
   );
 }

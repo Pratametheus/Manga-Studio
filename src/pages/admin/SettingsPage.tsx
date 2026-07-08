@@ -225,7 +225,7 @@ export default function SettingsPage() {
     return (
       <div className="flex min-h-screen bg-gray-50/50">
         <AdminSidebar />
-        <main className="flex-1 ml-64 p-8 flex items-center justify-center">
+        <main className="flex-1 ml-0 lg:ml-64 pt-20 flex items-center justify-center">
           <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
         </main>
       </div>
@@ -235,7 +235,7 @@ export default function SettingsPage() {
   return (
     <div className="flex min-h-screen bg-gray-50/50 font-sans">
       <AdminSidebar />
-      <main className="flex-1 ml-64 p-8 lg:p-10">
+      <main className="flex-1 ml-0 lg:ml-64 px-4 pb-4 pt-20 lg:p-10 w-full min-w-0">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
             <div className="relative flex items-center justify-center w-12 h-12 bg-gray-900 rounded-xl shadow-lg shadow-gray-900/20">

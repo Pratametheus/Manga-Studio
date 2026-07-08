@@ -28,7 +28,7 @@ export default function ProjectStudioPage() {
     return (
       <div className="flex min-h-screen bg-gray-50/50">
         <AdminSidebar />
-        <main className="flex-1 ml-64 p-8 flex items-center justify-center">
+        <main className="flex-1 ml-0 lg:ml-64 pt-20 flex items-center justify-center">
           <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
         </main>
       </div>
@@ -38,9 +38,9 @@ export default function ProjectStudioPage() {
   return (
     <div className="flex min-h-screen bg-gray-50/50 font-sans">
       <AdminSidebar />
-      <main className="flex-1 ml-64 flex flex-col h-screen">
+      <main className="flex-1 ml-0 lg:ml-64 flex flex-col h-screen w-full min-w-0 pt-16 lg:pt-0">
         {/* Studio Header */}
-        <header className="bg-white border-b border-gray-200 px-8 py-6 flex-none">
+        <header className="bg-white border-b border-gray-200 px-4 lg:px-8 py-4 lg:py-6 flex-none">
           <Link to="/admin" className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-4">
             <ChevronLeft className="w-4 h-4" /> Kembali ke Dashboard
           </Link>
@@ -57,8 +57,8 @@ export default function ProjectStudioPage() {
         </header>
 
         {/* Studio Tabs */}
-        <div className="px-8 pt-6 border-b border-gray-200 bg-white flex-none">
-          <div className="flex gap-8 overflow-x-auto">
+        <div className="px-4 lg:px-8 pt-4 lg:pt-6 border-b border-gray-200 bg-white flex-none">
+          <div className="flex gap-4 lg:gap-8 overflow-x-auto custom-scrollbar">
             <button
               onClick={() => setActiveTab('kanban')}
               className={`pb-4 text-sm font-medium transition-colors border-b-2 flex items-center gap-2 whitespace-nowrap ${
@@ -118,7 +118,7 @@ export default function ProjectStudioPage() {
         </div>
 
         {/* Studio Content Area */}
-        <div className="flex-1 overflow-auto p-8">
+        <div className="flex-1 overflow-auto p-4 lg:p-8">
           <div className="max-w-6xl mx-auto">
             {activeTab === 'kanban' && <KanbanManager mangaId={manga.id} />}
             {activeTab === 'naskah' && <NaskahManager mangaId={manga.id} />}
