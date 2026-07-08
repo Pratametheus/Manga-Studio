@@ -4,14 +4,15 @@ import { supabase } from '../../lib/supabase';
 import { ProjectManga, Character } from '../../types';
 import { PublicNavbar } from '../../components/public/PublicNavbar';
 import { PublicFooter } from '../../components/public/PublicFooter';
-import { ChevronLeft, ExternalLink, Users, BookOpen, Globe } from 'lucide-react';
+import { ChevronLeft, ExternalLink, Users, BookOpen, Globe, X } from 'lucide-react';
 import { SEO } from '../../components/SEO';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function MangaDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [manga, setManga] = useState<ProjectManga | null>(null);
   const [characters, setCharacters] = useState<Character[]>([]);
+  const [selectedChar, setSelectedChar] = useState<Character | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -88,7 +89,7 @@ export default function MangaDetailPage() {
               Kembali
             </Link>
             
-            <div className="flex flex-col md:flex-row gap-8 items-end">
+            <div className="flex flex-col md:flex-row gap-8 items-center md:items-end text-center md:text-left">
               <div className="w-48 md:w-64 shrink-0 rounded-2xl overflow-hidden shadow-2xl shadow-black border-2 border-white/10 relative group">
                 <img 
                   src={manga.cover_url || 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=2070'} 
@@ -97,8 +98,8 @@ export default function MangaDetailPage() {
                 />
               </div>
               
-              <div className="flex-1 space-y-4 pb-4">
-                <div className="flex flex-wrap items-center gap-3 mb-2">
+              <div className="flex-1 space-y-4 pb-4 flex flex-col items-center md:items-start">
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-2">
                   <span className="px-3 py-1 bg-yellow-400 text-black text-xs font-black uppercase tracking-widest rounded-full">
                     {manga.target_pasar}
                   </span>
@@ -136,10 +137,10 @@ export default function MangaDetailPage() {
         </div>
 
         {/* Content Section */}
-        <div className="max-w-6xl mx-auto px-6 lg:px-12 py-16 grid grid-cols-1 lg:grid-cols-3 gap-16">
+        <div className="max-w-6xl mx-auto px-6 lg:px-12 py-16 space-y-24">
           
-          {/* Main Content (Synopsis & World) */}
-          <div className="lg:col-span-2 space-y-16">
+          {/* Synopsis & World */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {manga.sinopsis_lengkap && (
               <motion.section
                 initial={{ opacity: 0, y: 30 }}
@@ -168,7 +169,7 @@ export default function MangaDetailPage() {
               >
                 <div className="flex items-center gap-3 mb-6">
                   <Globe className="w-6 h-6 text-yellow-400" />
-                  <h2 className="text-2xl font-black uppercase tracking-widest">World Building (Lore)</h2>
+                  <h2 className="text-2xl font-black uppercase tracking-widest">World Building</h2>
                 </div>
                 <div className="p-8 bg-gray-900 rounded-2xl border border-white/5 shadow-inner">
                   <div className="prose prose-invert max-w-none text-gray-300 leading-relaxed font-serif">
@@ -181,70 +182,51 @@ export default function MangaDetailPage() {
             )}
           </div>
 
-          {/* Sidebar (Characters) */}
-          <div className="space-y-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Users className="w-6 h-6 text-yellow-400" />
-              <h2 className="text-2xl font-black uppercase tracking-widest">Karakter</h2>
+          {/* Characters Section */}
+          <div className="space-y-12">
+            <div className="flex flex-col items-center gap-3 text-center mb-10">
+              <Users className="w-10 h-10 text-yellow-400" />
+              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-widest">Karakter</h2>
+              <p className="text-gray-400">Kenali tokoh-tokoh dalam cerita ini.</p>
             </div>
             
             {characters.length > 0 ? (
-              <div className="space-y-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {characters.map((char, i) => (
                   <motion.div 
                     key={char.id} 
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.5, delay: i * 0.1 }}
-                    className="bg-gray-900 rounded-2xl overflow-hidden border border-white/5 hover:border-yellow-400/30 transition-colors group"
+                    onClick={() => setSelectedChar(char)}
+                    className="bg-gray-900 rounded-2xl overflow-hidden border border-white/5 hover:border-yellow-400/50 hover:shadow-[0_0_20px_rgba(250,204,21,0.15)] transition-all group cursor-pointer flex flex-col h-full"
                   >
-                    <div className="aspect-square relative overflow-hidden bg-black">
+                    <div className="aspect-[3/4] relative overflow-hidden bg-black shrink-0">
                       {char.desain_visual_path ? (
                         <img 
                           src={char.desain_visual_path} 
                           alt={char.nama}
-                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center bg-gray-800 text-gray-500 font-black text-4xl">
                           {char.nama.charAt(0)}
                         </div>
                       )}
-                      <div className="absolute top-3 left-3 px-3 py-1 bg-black/80 backdrop-blur-sm text-yellow-400 text-xs font-bold uppercase tracking-widest rounded">
+                      <div className="absolute top-3 left-3 px-3 py-1 bg-black/80 backdrop-blur-sm text-yellow-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-white/10">
                         {char.peran}
                       </div>
                     </div>
-                    <div className="p-5">
-                      <h3 className="text-xl font-black text-white mb-2">{char.nama}</h3>
-                      <p className="text-sm text-gray-400 line-clamp-3 mb-4">{char.profil_detail}</p>
-                      
-                      <div className="grid grid-cols-2 gap-y-2 text-xs">
-                        {char.umur && (
-                          <div>
-                            <span className="text-gray-500 block">Umur</span>
-                            <span className="text-white font-medium">{char.umur}</span>
-                          </div>
-                        )}
-                        {char.tinggi_badan && (
-                          <div>
-                            <span className="text-gray-500 block">Tinggi</span>
-                            <span className="text-white font-medium">{char.tinggi_badan}</span>
-                          </div>
-                        )}
-                        {char.kepribadian && (
-                          <div className="col-span-2">
-                            <span className="text-gray-500 block">Kepribadian</span>
-                            <span className="text-white font-medium">{char.kepribadian}</span>
-                          </div>
-                        )}
-                      </div>
+                    <div className="p-4 flex flex-col flex-1">
+                      <h3 className="text-lg font-black text-white mb-1 group-hover:text-yellow-400 transition-colors line-clamp-1">{char.nama}</h3>
+                      <p className="text-xs text-gray-400 line-clamp-2 mt-auto">{char.kepribadian || char.profil_detail || 'Misterius.'}</p>
                     </div>
                   </motion.div>
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 italic bg-gray-900/50 p-6 rounded-2xl border border-white/5 text-center">
+              <p className="text-gray-500 italic bg-gray-900/50 p-6 rounded-2xl border border-white/5 text-center max-w-2xl mx-auto">
                 Belum ada data karakter yang dipublikasikan.
               </p>
             )}
@@ -252,6 +234,120 @@ export default function MangaDetailPage() {
           
         </div>
       </main>
+
+      {/* Character Modal */}
+      <AnimatePresence>
+        {selectedChar && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedChar(null)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ type: 'spring', duration: 0.5, bounce: 0.3 }}
+              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-900 rounded-3xl shadow-2xl border border-white/10 custom-scrollbar flex flex-col md:flex-row"
+            >
+              <button
+                onClick={() => setSelectedChar(null)}
+                className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-gray-300 hover:text-white rounded-full hover:bg-black transition-colors backdrop-blur-sm"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto md:min-h-full bg-black relative shrink-0">
+                {selectedChar.desain_visual_path ? (
+                  <img 
+                    src={selectedChar.desain_visual_path} 
+                    alt={selectedChar.nama}
+                    className="w-full h-full object-cover object-top"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-700 font-black text-6xl">
+                    {selectedChar.nama.charAt(0)}
+                  </div>
+                )}
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 to-transparent md:hidden" />
+              </div>
+
+              <div className="p-6 md:p-8 lg:p-10 flex-1 text-left relative z-10 -mt-10 md:mt-0 space-y-8">
+                <div>
+                  <span className="px-3 py-1 bg-yellow-400 text-black text-xs font-black uppercase tracking-widest rounded-sm mb-3 inline-block">
+                    {selectedChar.peran}
+                  </span>
+                  <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight uppercase leading-none mb-4">{selectedChar.nama}</h2>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {selectedChar.umur && (
+                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                      <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Umur</span>
+                      <span className="text-white font-medium">{selectedChar.umur}</span>
+                    </div>
+                  )}
+                  {selectedChar.tinggi_badan && (
+                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                      <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Tinggi</span>
+                      <span className="text-white font-medium">{selectedChar.tinggi_badan}</span>
+                    </div>
+                  )}
+                  {selectedChar.berat_badan && (
+                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                      <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Berat</span>
+                      <span className="text-white font-medium">{selectedChar.berat_badan}</span>
+                    </div>
+                  )}
+                  {selectedChar.ulang_tahun && (
+                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                      <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Ultah</span>
+                      <span className="text-white font-medium">{selectedChar.ulang_tahun}</span>
+                    </div>
+                  )}
+                  {selectedChar.golongan_darah && (
+                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                      <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Darah</span>
+                      <span className="text-white font-medium">{selectedChar.golongan_darah}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-6">
+                  {selectedChar.kepribadian && (
+                    <div>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kepribadian</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kepribadian}</p>
+                    </div>
+                  )}
+                  {selectedChar.kekuatan_senjata && (
+                    <div>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kemampuan & Senjata</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kekuatan_senjata}</p>
+                    </div>
+                  )}
+                  {selectedChar.kesukaan_ketidaksukaan && (
+                    <div>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kesukaan / Ketidaksukaan</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kesukaan_ketidaksukaan}</p>
+                    </div>
+                  )}
+                  {selectedChar.profil_detail && (
+                    <div>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Latar Belakang</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.profil_detail}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       
       <PublicFooter />
     </div>
