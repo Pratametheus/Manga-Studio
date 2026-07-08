@@ -55,10 +55,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error('Failed to fetch SEO from Supabase', error);
   }
 
-  // Fetch the static index.html
+  // Fetch the static base.html (we renamed it during build so Vercel doesn't serve it for / automatically)
   try {
-    // Requesting the actual static index.html from our own host
-    const htmlResponse = await fetch(`${protocol}://${host}/index.html?raw=true`);
+    const htmlResponse = await fetch(`${protocol}://${host}/base.html`);
     let html = await htmlResponse.text();
 
     // Replace tags (supporting both '/>' and '>' because Vite minifies HTML)
