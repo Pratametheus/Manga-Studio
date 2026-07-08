@@ -13,6 +13,7 @@ export default function MangaDetailPage() {
   const [manga, setManga] = useState<ProjectManga | null>(null);
   const [characters, setCharacters] = useState<Character[]>([]);
   const [selectedChar, setSelectedChar] = useState<Character | null>(null);
+  const [isCoverModalOpen, setIsCoverModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -90,12 +91,18 @@ export default function MangaDetailPage() {
             </Link>
             
             <div className="flex flex-col md:flex-row gap-8 items-center md:items-end text-center md:text-left">
-              <div className="w-48 md:w-64 shrink-0 rounded-2xl overflow-hidden shadow-2xl shadow-black border-2 border-white/10 relative group">
+              <div 
+                onClick={() => setIsCoverModalOpen(true)}
+                className="w-48 md:w-64 shrink-0 rounded-2xl overflow-hidden shadow-2xl shadow-black border-2 border-white/10 relative group cursor-pointer"
+              >
                 <img 
                   src={manga.cover_url || 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=2070'} 
                   alt={manga.judul}
                   className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-500"
                 />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                  <span className="text-white font-bold tracking-widest text-sm bg-black/50 px-4 py-2 rounded-full border border-white/20">Lihat Penuh</span>
+                </div>
               </div>
               
               <div className="flex-1 space-y-4 pb-4 flex flex-col items-center md:items-start">
@@ -251,7 +258,7 @@ export default function MangaDetailPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ type: 'spring', duration: 0.5, bounce: 0.3 }}
-              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-900 rounded-3xl shadow-2xl border border-white/10 custom-scrollbar flex flex-col md:flex-row"
+              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto md:overflow-hidden bg-gray-900 rounded-3xl shadow-2xl border border-white/10 custom-scrollbar flex flex-col md:flex-row items-stretch"
             >
               <button
                 onClick={() => setSelectedChar(null)}
@@ -260,22 +267,22 @@ export default function MangaDetailPage() {
                 <X className="w-5 h-5" />
               </button>
               
-              <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto md:min-h-full bg-black relative shrink-0">
+              <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto bg-black relative shrink-0">
                 {selectedChar.desain_visual_path ? (
                   <img 
                     src={selectedChar.desain_visual_path} 
                     alt={selectedChar.nama}
-                    className="w-full h-full object-cover object-top"
+                    className="w-full h-full md:absolute md:inset-0 object-cover object-top"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-700 font-black text-6xl">
+                  <div className="w-full h-full md:absolute md:inset-0 flex items-center justify-center text-gray-700 font-black text-6xl">
                     {selectedChar.nama.charAt(0)}
                   </div>
                 )}
                 <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 to-transparent md:hidden" />
               </div>
 
-              <div className="p-6 md:p-8 lg:p-10 flex-1 text-left relative z-10 -mt-10 md:mt-0 space-y-8">
+              <div className="p-6 md:p-8 lg:p-10 flex-1 text-left relative z-10 -mt-10 md:mt-0 space-y-8 md:overflow-y-auto custom-scrollbar">
                 <div>
                   <span className="px-3 py-1 bg-yellow-400 text-black text-xs font-black uppercase tracking-widest rounded-sm mb-3 inline-block">
                     {selectedChar.peran}
@@ -343,6 +350,40 @@ export default function MangaDetailPage() {
                   )}
                 </div>
               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Cover Image Modal */}
+      <AnimatePresence>
+        {isCoverModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsCoverModalOpen(false)}
+              className="absolute inset-0 bg-black/90 backdrop-blur-sm cursor-zoom-out"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ type: 'spring', duration: 0.4 }}
+              className="relative z-10 max-w-[90vw] max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+            >
+              <button
+                onClick={() => setIsCoverModalOpen(false)}
+                className="absolute top-4 right-4 p-2 bg-black/50 text-white rounded-full hover:bg-black transition-colors backdrop-blur-sm"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              <img 
+                src={manga.cover_url || 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=2070'} 
+                alt={manga.judul}
+                className="max-w-full max-h-[90vh] object-contain"
+              />
             </motion.div>
           </div>
         )}
