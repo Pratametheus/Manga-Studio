@@ -4,10 +4,13 @@ import { PublicFooter } from '../../components/public/PublicFooter';
 import { SEO } from '../../components/SEO';
 import { supabase } from '../../lib/supabase';
 import { Artwork } from '../../types';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, ShieldAlert } from 'lucide-react';
 
 export default function PublicGalleryPage() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [seoSettings, setSeoSettings] = useState({
     title: 'Galeri Artwork | MangaStudio',
     description: 'Jelajahi karya ilustrasi, concept art, dan portofolio desain karakter dari tim kreatif MangaStudio.',
@@ -39,6 +42,20 @@ export default function PublicGalleryPage() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (selectedArtwork) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [selectedArtwork]);
+
+  // Anti-download handler
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-yellow-400 selection:text-black">
       <SEO 
@@ -65,14 +82,22 @@ export default function PublicGalleryPage() {
         ) : (
           <div className="columns-1 sm:columns-2 md:columns-3 gap-6 space-y-6">
             {artworks.map((art) => (
-              <div key={art.id} className="break-inside-avoid relative group overflow-hidden rounded-2xl bg-gray-900 border border-gray-800">
+              <div 
+                key={art.id} 
+                onClick={() => setSelectedArtwork(art)}
+                className="break-inside-avoid relative group overflow-hidden rounded-2xl bg-gray-900 border border-gray-800 cursor-pointer"
+                onContextMenu={handleContextMenu}
+              >
+                {/* Transparent overlay to block direct image interactions */}
+                <div className="absolute inset-0 z-10" />
                 <img 
                   src={art.image_url} 
                   alt={art.title} 
-                  className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105" 
+                  className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105 select-none pointer-events-none" 
                   loading="lazy"
+                  draggable={false}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 z-20">
                   <h3 className="text-xl font-bold text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{art.title}</h3>
                   {art.description && (
                     <p className="text-sm text-gray-300 line-clamp-3 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
@@ -92,6 +117,58 @@ export default function PublicGalleryPage() {
           </div>
         )}
       </main>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {selectedArtwork && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" onContextMenu={handleContextMenu}>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedArtwork(null)}
+              className="absolute inset-0 bg-black/95 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ type: 'spring', duration: 0.5 }}
+              className="relative w-full max-w-5xl max-h-[90vh] flex flex-col items-center justify-center pointer-events-none"
+            >
+              <button
+                onClick={() => setSelectedArtwork(null)}
+                className="absolute -top-12 right-0 md:-right-12 z-50 p-2 text-gray-400 hover:text-white transition-colors pointer-events-auto"
+              >
+                <X className="w-8 h-8" />
+              </button>
+              
+              <div className="relative rounded-lg overflow-hidden shadow-2xl pointer-events-auto select-none" onContextMenu={handleContextMenu}>
+                {/* Transparent overlay layer to intercept clicks */}
+                <div className="absolute inset-0 z-10" />
+                <img 
+                  src={selectedArtwork.image_url} 
+                  alt={selectedArtwork.title}
+                  className="max-w-full max-h-[75vh] object-contain select-none pointer-events-none"
+                  draggable={false}
+                />
+              </div>
+
+              <div className="mt-6 text-center max-w-2xl pointer-events-auto">
+                <h3 className="text-2xl font-bold text-white mb-2">{selectedArtwork.title}</h3>
+                {selectedArtwork.description && (
+                  <p className="text-gray-400 text-sm">{selectedArtwork.description}</p>
+                )}
+                
+                <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10">
+                  <ShieldAlert className="w-3 h-3 text-yellow-500" />
+                  <span className="text-[10px] text-gray-400 uppercase tracking-widest">Karya Dilindungi Hak Cipta</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       <PublicFooter />
     </div>
