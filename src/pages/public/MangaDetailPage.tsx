@@ -48,6 +48,18 @@ export default function MangaDetailPage() {
     fetchData();
   }, [id]);
 
+  useEffect(() => {
+    if (selectedChar) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedChar]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
