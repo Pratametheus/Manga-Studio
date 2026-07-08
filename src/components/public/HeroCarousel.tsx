@@ -56,20 +56,26 @@ export function HeroCarousel({ mangas }: HeroCarouselProps) {
               {current.logline || current.sinopsis_lengkap}
             </p>
 
-            <div className="flex items-center gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-4">
               <a 
-                href="#"
+                href={current.link_publikasi || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-8 py-4 bg-yellow-400 text-black font-black text-lg tracking-widest uppercase rounded-lg hover:bg-yellow-300 transition-all hover:scale-105 shadow-[0_0_20px_rgba(250,204,21,0.3)]"
+                className="flex items-center justify-center gap-2 px-6 py-3.5 sm:px-8 sm:py-4 bg-yellow-400 text-black font-black text-sm sm:text-lg tracking-widest uppercase rounded-lg hover:bg-yellow-300 transition-all sm:hover:scale-105 shadow-[0_0_20px_rgba(250,204,21,0.3)]"
+                onClick={(e) => {
+                  if (!current.link_publikasi) e.preventDefault();
+                }}
               >
-                <ExternalLink className="w-6 h-6" />
-                Baca di Webtoon
+                <ExternalLink className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
+                <span>Baca di Webtoon</span>
               </a>
-              <button className="flex items-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold text-lg tracking-widest uppercase rounded-lg transition-all backdrop-blur-md border border-white/20 hover:scale-105">
-                <Info className="w-6 h-6" />
-                Detail Project
-              </button>
+              <Link 
+                to={`/manga/${current.id}`}
+                className="flex items-center justify-center gap-2 px-6 py-3.5 sm:px-8 sm:py-4 bg-white/10 hover:bg-white/20 text-white font-bold text-sm sm:text-lg tracking-widest uppercase rounded-lg transition-all backdrop-blur-md border border-white/20 sm:hover:scale-105"
+              >
+                <Info className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
+                <span>Detail Project</span>
+              </Link>
             </div>
             
           </div>
