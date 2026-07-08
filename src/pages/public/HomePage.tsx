@@ -64,7 +64,8 @@ export default function HomePage() {
   }
 
   // Pengelompokan Data (Simulasi untuk Homepage)
-  const heroMangas = mangas.slice(0, 3);
+  const featuredMangas = mangas.filter(m => m.is_featured).slice(0, 5);
+  const heroMangas = featuredMangas.length > 0 ? featuredMangas : mangas.slice(0, 3);
   const shonenMangas = mangas.filter(m => m.target_pasar === 'shonen');
   const shojoMangas = mangas.filter(m => m.target_pasar === 'shojo');
   

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ProjectManga } from '../../../types';
 import { ExternalLink, Info, ChevronRight, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface HeroCarouselProps {
   mangas: ProjectManga[];
@@ -27,7 +28,23 @@ export function HeroCarousel({ mangas }: HeroCarouselProps) {
 
   return (
     <div id="hero" className="relative w-full h-[85vh] min-h-[600px] max-h-[800px] overflow-hidden bg-black group">
-      {/* Background Cover */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.5 }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.2}
+          onDragEnd={(e, { offset }) => {
+            if (offset.x < -50) nextSlide();
+            else if (offset.x > 50) prevSlide();
+          }}
+          className="absolute inset-0 cursor-grab active:cursor-grabbing"
+        >
+          {/* Background Cover */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 scale-105"
         style={{ backgroundImage: `url(${current.cover_url || 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=2070'})` }}
@@ -81,6 +98,8 @@ export function HeroCarousel({ mangas }: HeroCarouselProps) {
           </div>
         </div>
       </div>
+      </motion.div>
+      </AnimatePresence>
 
       {/* Controls */}
       {mangas.length > 1 && (

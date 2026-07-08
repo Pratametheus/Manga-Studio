@@ -12,6 +12,7 @@ export interface ProjectManga {
   status: string;
   cover_url?: string;
   link_publikasi?: string;
+  is_featured?: boolean;
   created_at?: string;
   updated_at?: string;
 }

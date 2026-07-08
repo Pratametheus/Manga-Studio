@@ -14,6 +14,7 @@ const formSchema = z.object({
   target_pasar: z.enum(['shonen', 'shojo', 'seinen', 'josei']),
   status: z.string(),
   link_publikasi: z.string().url("Format URL tidak valid").optional().or(z.literal('')),
+  is_featured: z.boolean().optional(),
   sinopsis_lengkap: z.string().optional(),
   world_building: z.string().optional(),
 });
@@ -36,6 +37,7 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
       target_pasar: 'shonen',
       status: 'draft',
       link_publikasi: '',
+      is_featured: false,
       sinopsis_lengkap: '',
       world_building: '',
     }
@@ -214,6 +216,21 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
             placeholder="https://webtoons.com/..."
           />
           {errors.link_publikasi && <p className="mt-1.5 text-sm text-red-500">{errors.link_publikasi.message}</p>}
+        </div>
+
+        <div className="flex items-center gap-3 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+          <input
+            type="checkbox"
+            id="is_featured"
+            {...register('is_featured')}
+            className="w-5 h-5 text-yellow-500 border-yellow-300 rounded focus:ring-yellow-500"
+          />
+          <div>
+            <label htmlFor="is_featured" className="block text-sm font-bold text-gray-900 cursor-pointer">
+              Jadikan Karya Pilihan (Featured)
+            </label>
+            <p className="text-xs text-gray-600 mt-0.5">Tampilkan karya ini di Banner Utama halaman publik (maksimal 5 karya direkomendasikan).</p>
+          </div>
         </div>
 
         <div>
