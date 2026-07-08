@@ -78,3 +78,11 @@ export interface PublicCreator {
   avatar_url?: string;
   order_index: number;
 }
+
+export interface Artwork {
+  id: string;
+  title: string;
+  description?: string;
+  image_url: string;
+  created_at?: string;
+}

@@ -5,8 +5,10 @@ import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
 import { LandingFAQTab } from '../../components/admin/LandingFAQTab';
 import { LandingTeamTab } from '../../components/admin/LandingTeamTab';
+import { LandingSEOTab } from '../../components/admin/LandingSEOTab';
+import { Globe } from 'lucide-react';
 
-type Tab = 'general' | 'faq' | 'team';
+type Tab = 'general' | 'faq' | 'team' | 'seo';
 
 export default function LandingSettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -165,6 +167,14 @@ export default function LandingSettingsPage() {
               >
                 <Users className="w-4 h-4" /> Manajemen Tim
               </button>
+              <button
+                onClick={() => setActiveTab('seo')}
+                className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors ${
+                  activeTab === 'seo' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50'
+                }`}
+              >
+                <Globe className="w-4 h-4" /> Manajemen SEO
+              </button>
             </div>
 
             {activeTab === 'general' && (
@@ -312,6 +322,7 @@ export default function LandingSettingsPage() {
 
             {activeTab === 'faq' && <LandingFAQTab />}
             {activeTab === 'team' && <LandingTeamTab />}
+            {activeTab === 'seo' && <LandingSEOTab />}
           </div>
 
         </div>

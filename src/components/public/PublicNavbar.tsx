@@ -58,6 +58,9 @@ export function PublicNavbar() {
                 <a href="/#hero" className="text-sm font-bold text-white hover:text-yellow-400 transition-colors tracking-widest uppercase">
                   Beranda
                 </a>
+                <Link to="/gallery" className="text-sm font-bold text-gray-400 hover:text-yellow-400 transition-colors tracking-widest uppercase">
+                  Galeri
+                </Link>
                 <a href="/#karya" className="text-sm font-bold text-gray-400 hover:text-yellow-400 transition-colors tracking-widest uppercase">
                   Karya Kami
                 </a>
@@ -122,6 +125,7 @@ export function PublicNavbar() {
           >
             <div className="flex flex-col gap-6 text-center mt-10">
               <a href="/#hero" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-white hover:text-yellow-400 uppercase tracking-widest transition-colors">Beranda</a>
+              <Link to="/gallery" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-gray-400 hover:text-yellow-400 uppercase tracking-widest transition-colors">Galeri</Link>
               <a href="/#karya" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-gray-400 hover:text-yellow-400 uppercase tracking-widest transition-colors">Karya Kami</a>
               <a href="/#tim" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-gray-400 hover:text-yellow-400 uppercase tracking-widest transition-colors">Tim Kami</a>
               <a href="/#tentang" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-gray-400 hover:text-yellow-400 uppercase tracking-widest transition-colors">Tentang Kami</a>

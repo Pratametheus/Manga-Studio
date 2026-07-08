@@ -21,6 +21,11 @@ export default function HomePage() {
   });
   const [totalBab, setTotalBab] = useState(120);
   const [totalPembaca, setTotalPembaca] = useState(50);
+  const [seoSettings, setSeoSettings] = useState({
+    title: 'MangaStudio | Official Portfolio',
+    description: 'Rumah produksi komik independen yang berdedikasi menciptakan kisah epik dengan standar visual tertinggi.',
+    image: 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=2070'
+  });
   const [loading, setLoading] = useState(true);
   const [openFaq, setOpenFaq] = useState<string | null>(null);
   const [faqs, setFaqs] = useState<any[]>([]);
@@ -91,6 +96,13 @@ export default function HomePage() {
         }
         if (studioData.total_bab) setTotalBab(parseInt(studioData.total_bab, 10));
         if (studioData.total_pembaca) setTotalPembaca(parseInt(studioData.total_pembaca, 10));
+        if (studioData.seo_title || studioData.seo_description) {
+          setSeoSettings({
+            title: studioData.seo_title || 'MangaStudio | Official Portfolio',
+            description: studioData.seo_description || 'Rumah produksi komik independen yang berdedikasi menciptakan kisah epik dengan standar visual tertinggi.',
+            image: studioData.seo_image_url || 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=2070'
+          });
+        }
       }
 
       setLoading(false);
@@ -114,7 +126,11 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-yellow-400 selection:text-black pb-0">
-      <SEO />
+      <SEO 
+        title={seoSettings.title} 
+        description={seoSettings.description} 
+        image={seoSettings.image} 
+      />
       <PublicNavbar />
 
       <main>

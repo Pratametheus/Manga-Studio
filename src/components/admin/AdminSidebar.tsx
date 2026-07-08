@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PenTool, LayoutDashboard, Settings, LogOut, Sparkles, Library, User as UserIcon, Menu, X, LayoutTemplate } from 'lucide-react';
+import { PenTool, LayoutDashboard, Settings, LogOut, Sparkles, Library, User as UserIcon, Menu, X, LayoutTemplate, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useNavigate, Link, useLocation, NavLink } from 'react-router-dom';
 import { cn } from '../../lib/utils';
@@ -169,6 +169,16 @@ export function AdminSidebar() {
             <LayoutTemplate className={cn("w-5 h-5", location.pathname === '/admin/landing' ? "text-indigo-400" : "text-gray-500 group-hover:text-gray-400")} />
             Landing Page
           </NavLink>
+          <Link 
+            to="/admin/gallery" 
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 font-medium rounded-lg transition-colors group",
+              isActive('/admin/gallery') ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"
+            )}
+          >
+            <ImageIcon className={cn("w-5 h-5", isActive('/admin/gallery') ? "text-indigo-400" : "text-gray-500 group-hover:text-gray-400")} />
+            Galeri Portofolio
+          </Link>
           <Link 
             to="/admin/settings" 
             className={cn(
