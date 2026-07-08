@@ -233,6 +233,7 @@ export function AdminSidebar() {
           </div>
         )}
       </Modal>
+      </aside>
     </>
   );
 }
