@@ -45,7 +45,7 @@ export function LandingTeamTab() {
       let finalAvatarUrl = formData.avatar_url;
       if (avatarFile) {
         const fileExt = avatarFile.name.split('.').pop();
-        const fileName = "team/avatar--.";
+        const fileName = `team/avatar-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
         const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, avatarFile);
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
@@ -74,7 +74,7 @@ export function LandingTeamTab() {
       let finalAvatarUrl = formData.avatar_url;
       if (avatarFile) {
         const fileExt = avatarFile.name.split('.').pop();
-        const fileName = "team/avatar--.";
+        const fileName = `team/avatar-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
         const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, avatarFile);
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
