@@ -28,13 +28,13 @@ export function HeroCarousel({ mangas }: HeroCarouselProps) {
 
   return (
     <div id="hero" className="relative w-full h-[85vh] min-h-[600px] max-h-[800px] overflow-hidden bg-black group">
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         <motion.div
           key={currentIndex}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.5 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.7 }}
           onPanEnd={(e, info) => {
             if (info.offset.x < -50) nextSlide();
             else if (info.offset.x > 50) prevSlide();
