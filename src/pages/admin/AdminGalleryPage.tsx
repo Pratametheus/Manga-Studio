@@ -5,6 +5,55 @@ import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
 import { Artwork } from '../../types';
 
+const applyWatermark = (file: File): Promise<File> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return resolve(file);
+
+      ctx.drawImage(img, 0, 0);
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      const fontSize = Math.max(img.width * 0.05, 30);
+      ctx.font = `bold ${fontSize}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate(-Math.PI / 4);
+      
+      const text = 'MANGASTUDIO';
+      const spacingX = fontSize * 6;
+      const spacingY = fontSize * 4;
+      const maxDist = Math.max(canvas.width, canvas.height) * 1.5;
+      
+      for (let x = -maxDist; x <= maxDist; x += spacingX) {
+        for (let y = -maxDist; y <= maxDist; y += spacingY) {
+          ctx.fillText(text, x, y);
+        }
+      }
+      
+      ctx.restore();
+
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const watermarkedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: 'image/jpeg' });
+          resolve(watermarkedFile);
+        } else {
+          resolve(file);
+        }
+      }, 'image/jpeg', 0.9);
+    };
+    img.onerror = () => resolve(file);
+    img.src = URL.createObjectURL(file);
+  });
+};
+
 export default function AdminGalleryPage() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,9 +98,11 @@ export default function AdminGalleryPage() {
     try {
       let finalImageUrl = formData.image_url;
       if (imageFile) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = "gallery/art--.";
-        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, imageFile);
+        toast.loading('Memberikan watermark & mengunggah...', { id: toastId });
+        const watermarkedFile = await applyWatermark(imageFile);
+        
+        const fileName = `gallery/art-${Math.random().toString(36).substring(2)}-${Date.now()}.jpg`;
+        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, watermarkedFile);
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
         finalImageUrl = data.publicUrl;
@@ -76,9 +127,11 @@ export default function AdminGalleryPage() {
     try {
       let finalImageUrl = formData.image_url;
       if (imageFile) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = "gallery/art--.";
-        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, imageFile);
+        toast.loading('Memberikan watermark & mengunggah...', { id: toastId });
+        const watermarkedFile = await applyWatermark(imageFile);
+        
+        const fileName = `gallery/art-${Math.random().toString(36).substring(2)}-${Date.now()}.jpg`;
+        const { error: uploadError } = await supabase.storage.from('manga_assets').upload(fileName, watermarkedFile);
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
         finalImageUrl = data.publicUrl;
