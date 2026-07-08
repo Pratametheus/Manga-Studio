@@ -28,6 +28,8 @@ export default function SettingsPage() {
   const [emailKontak, setEmailKontak] = useState('');
   const [instagramUrl, setInstagramUrl] = useState('');
   const [xUrl, setXUrl] = useState('');
+  const [beforeImageUrl, setBeforeImageUrl] = useState('');
+  const [afterImageUrl, setAfterImageUrl] = useState('');
   const [savingStudioSettings, setSavingStudioSettings] = useState(false);
 
   useEffect(() => {
@@ -53,6 +55,8 @@ export default function SettingsPage() {
         setEmailKontak(studioData.email_kontak || '');
         setInstagramUrl(studioData.instagram_url || '');
         setXUrl(studioData.x_url || '');
+        setBeforeImageUrl(studioData.before_image_url || '');
+        setAfterImageUrl(studioData.after_image_url || '');
       }
 
       setLoading(false);
@@ -209,6 +213,8 @@ export default function SettingsPage() {
         email_kontak: emailKontak,
         instagram_url: instagramUrl,
         x_url: xUrl,
+        before_image_url: beforeImageUrl,
+        after_image_url: afterImageUrl,
         updated_at: new Date().toISOString()
       });
 
@@ -418,6 +424,29 @@ export default function SettingsPage() {
                       onChange={(e) => setXUrl(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
                       placeholder="https://x.com/..."
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Gambar Slider (Sketsa/Before)</label>
+                    <input
+                      type="url"
+                      value={beforeImageUrl}
+                      onChange={(e) => setBeforeImageUrl(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                      placeholder="URL gambar sketsa (opsional)"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Gambar Slider (Final/After)</label>
+                    <input
+                      type="url"
+                      value={afterImageUrl}
+                      onChange={(e) => setAfterImageUrl(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                      placeholder="URL gambar final (opsional)"
                     />
                   </div>
                 </div>

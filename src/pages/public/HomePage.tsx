@@ -15,6 +15,10 @@ export default function HomePage() {
   const [mangas, setMangas] = useState<ProjectManga[]>([]);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [contactEmail, setContactEmail] = useState('');
+  const [sliderImages, setSliderImages] = useState({
+    before: "https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?q=80&w=1974&auto=format&fit=crop",
+    after: "https://images.unsplash.com/photo-1578632292335-df3fbc91351e?q=80&w=1974&auto=format&fit=crop"
+  });
   const [loading, setLoading] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   
@@ -51,12 +55,18 @@ export default function HomePage() {
       // 3. Ambil setting studio
       const { data: studioData } = await supabase
         .from('studio_settings')
-        .select('email_kontak')
+        .select('*')
         .eq('id', 1)
         .single();
         
-      if (studioData?.email_kontak) {
-        setContactEmail(studioData.email_kontak);
+      if (studioData) {
+        if (studioData.email_kontak) setContactEmail(studioData.email_kontak);
+        if (studioData.before_image_url || studioData.after_image_url) {
+          setSliderImages(prev => ({
+            before: studioData.before_image_url || prev.before,
+            after: studioData.after_image_url || prev.after
+          }));
+        }
       }
 
       setLoading(false);
@@ -81,8 +91,7 @@ export default function HomePage() {
   const faqs = [
     { q: "Kapan jadwal update bab komik baru?", a: "Jadwal update kami bergantung pada skala produksi tiap judul. Namun umumnya, judul aktif akan mendapatkan update 1 bab baru setiap bulannya." },
     { q: "Apakah MangaStudio menerima komisi ilustrasi?", a: "Ya! Kami sangat terbuka untuk kerja sama B2B, komisi pembuatan webtoon, promosi produk via komik, atau desain karakter game." },
-    { q: "Di mana saya bisa membaca komik-komik buatan studio ini?", a: "Mayoritas karya kami dipublikasikan secara resmi di platform Webtoon Canvas atau platform partner lainnya. Kamu bisa klik tombol 'Baca di Webtoon' pada setiap detail komik." },
-    { q: "Apakah saya bisa melamar menjadi asisten atau kreator di sini?", a: "Tentu. Kami selalu mencari bakat baru, baik lineartist, colorist, maupun storyboarder. Silakan hubungi email kontak kami dengan menyertakan portofolio terbaikmu!" }
+    { q: "Di mana saya bisa membaca komik-komik buatan studio ini?", a: "Mayoritas karya kami dipublikasikan secara resmi di platform Webtoon Canvas atau platform partner lainnya. Kamu bisa klik tombol 'Baca di Webtoon' pada setiap detail komik." }
   ];
   
   return (
@@ -219,8 +228,8 @@ export default function HomePage() {
               >
                 <div className="absolute -inset-4 bg-gradient-to-r from-yellow-400/20 to-indigo-500/20 blur-2xl -z-10 rounded-3xl" />
                 <BeforeAfterSlider 
-                  beforeImage="https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?q=80&w=1974&auto=format&fit=crop" 
-                  afterImage="https://images.unsplash.com/photo-1578632292335-df3fbc91351e?q=80&w=1974&auto=format&fit=crop" 
+                  beforeImage={sliderImages.before} 
+                  afterImage={sliderImages.after} 
                 />
               </motion.div>
             </div>
