@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { ProjectManga, Character } from '../../types';
 import { PublicNavbar } from '../../components/public/PublicNavbar';
+import { PublicFooter } from '../../components/public/PublicFooter';
 import { ChevronLeft, ExternalLink, Users, BookOpen, Globe } from 'lucide-react';
 import { SEO } from '../../components/SEO';
 import { motion } from 'motion/react';
@@ -252,16 +253,7 @@ export default function MangaDetailPage() {
         </div>
       </main>
       
-      {/* Footer */}
-      <footer className="py-12 border-t border-white/10 text-center text-gray-500 text-sm bg-black">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center grayscale opacity-50">
-            <span className="text-black font-black text-base leading-none">M</span>
-          </div>
-          <span className="font-bold tracking-widest uppercase">MangaStudio</span>
-        </div>
-        <p>&copy; {new Date().getFullYear()} Manga Studio. All rights reserved.</p>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }
