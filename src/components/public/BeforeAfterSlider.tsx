@@ -46,7 +46,7 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
   return (
     <div 
       ref={containerRef}
-      className="relative w-full aspect-square sm:aspect-video overflow-hidden rounded-2xl cursor-ew-resize select-none border border-white/10 group"
+      className="relative w-full overflow-hidden rounded-2xl cursor-ew-resize select-none border border-white/10 group bg-gray-900"
       onMouseDown={(e) => {
         setIsDragging(true);
         handleMove(e.clientX);
@@ -56,11 +56,11 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
         handleMove(e.touches[0].clientX);
       }}
     >
-      {/* Background/After Image (Final) */}
+      {/* Background/After Image (Final) - Made relative to dictate container height naturally */}
       <img 
         src={afterImage} 
         alt="Final Colored Art" 
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        className="w-full h-auto object-contain pointer-events-none block"
       />
       
       {/* Foreground/Before Image (Sketch) with Clip Path */}
@@ -71,7 +71,7 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
         <img 
           src={beforeImage} 
           alt="Rough Sketch" 
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none grayscale"
+          className="absolute inset-0 w-full h-full object-contain pointer-events-none grayscale bg-gray-900"
         />
         {/* Overlay Label for Sketch */}
         <div className="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur text-white text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-white/20">
