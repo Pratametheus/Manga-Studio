@@ -46,7 +46,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             const settings = data[0];
             if (settings.seo_title) seoData.title = settings.seo_title;
             if (settings.seo_description) seoData.description = settings.seo_description;
-            if (settings.seo_image) seoData.image = settings.seo_image;
+            if (settings.seo_image_url) seoData.image = settings.seo_image_url;
           }
         }
       }
