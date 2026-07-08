@@ -1,5 +1,6 @@
 import { ExternalLink } from 'lucide-react';
 import { ProjectManga } from '../../../types';
+import { Link } from 'react-router-dom';
 
 interface MangaCardProps {
   manga: ProjectManga;
@@ -7,7 +8,8 @@ interface MangaCardProps {
 
 export function MangaCard({ manga }: MangaCardProps) {
   return (
-    <div 
+    <Link 
+      to={`/manga/${manga.id}`}
       className="block snap-start group relative flex-none w-[140px] sm:w-[180px] md:w-[220px] lg:w-[240px] aspect-[3/4] rounded-xl overflow-hidden cursor-pointer transition-all duration-300 transform hover:scale-105 hover:z-10 bg-gray-900 border border-white/10"
     >
       <div 
@@ -32,6 +34,6 @@ export function MangaCard({ manga }: MangaCardProps) {
       <div className="absolute top-4 right-4 w-10 h-10 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 border border-white/20">
         <ExternalLink className="w-4 h-4 text-white" />
       </div>
-    </div>
+    </Link>
   );
 }

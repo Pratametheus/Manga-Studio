@@ -2,6 +2,7 @@ export type TargetPasar = 'shonen' | 'shojo' | 'seinen' | 'josei';
 
 export interface ProjectManga {
   id: string;
+  user_id: string;
   judul: string;
   logline: string;
   tema: string;
@@ -10,6 +11,9 @@ export interface ProjectManga {
   world_building: string;
   status: string;
   cover_url?: string;
+  link_publikasi?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Character {

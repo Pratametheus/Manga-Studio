@@ -8,6 +8,7 @@ import { MangaRow } from '../../components/public/MangaRow';
 export default function HomePage() {
   const [mangas, setMangas] = useState<ProjectManga[]>([]);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  const [contactEmail, setContactEmail] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +27,6 @@ export default function HomePage() {
         .from('profiles')
         .select('*');
         
-      // Fallback jika belum ada tabel profiles atau belum disinkron
       if (profileError || !profileData || profileData.length === 0) {
         setTeamMembers([
           { nama_pena: 'Ferry', role: 'Founder / Lead Artist', avatar_url: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=200&h=200&fit=crop' },
@@ -34,6 +34,17 @@ export default function HomePage() {
         ]);
       } else {
         setTeamMembers(profileData);
+      }
+
+      // 3. Ambil setting studio
+      const { data: studioData } = await supabase
+        .from('studio_settings')
+        .select('email_kontak')
+        .eq('id', 1)
+        .single();
+        
+      if (studioData?.email_kontak) {
+        setContactEmail(studioData.email_kontak);
       }
 
       setLoading(false);
@@ -139,9 +150,18 @@ export default function HomePage() {
             <p className="text-gray-400 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl mx-auto">
               Tertarik untuk bekerja sama, diskusi bisnis, atau sekadar menyapa? Jangan ragu untuk menghubungi kami.
             </p>
-            <button className="px-8 py-4 bg-yellow-400 text-black font-black text-lg tracking-widest uppercase rounded-lg hover:bg-yellow-300 transition-all hover:scale-105 shadow-[0_0_20px_rgba(250,204,21,0.3)] inline-flex items-center gap-3">
+            <a 
+              href={contactEmail ? `mailto:${contactEmail}` : '#'}
+              onClick={(e) => {
+                if (!contactEmail) {
+                  e.preventDefault();
+                  alert('Email kontak belum diatur.');
+                }
+              }}
+              className="px-8 py-4 bg-yellow-400 text-black font-black text-lg tracking-widest uppercase rounded-lg hover:bg-yellow-300 transition-all hover:scale-105 shadow-[0_0_20px_rgba(250,204,21,0.3)] inline-flex items-center gap-3"
+            >
               Hubungi Kami
-            </button>
+            </a>
           </div>
         </section>
       </main>

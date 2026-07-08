@@ -13,6 +13,7 @@ const formSchema = z.object({
   tema: z.string().optional(),
   target_pasar: z.enum(['shonen', 'shojo', 'seinen', 'josei']),
   status: z.string(),
+  link_publikasi: z.string().url("Format URL tidak valid").optional().or(z.literal('')),
   sinopsis_lengkap: z.string().optional(),
   world_building: z.string().optional(),
 });
@@ -34,6 +35,7 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
       tema: '',
       target_pasar: 'shonen',
       status: 'draft',
+      link_publikasi: '',
       sinopsis_lengkap: '',
       world_building: '',
     }
@@ -201,6 +203,17 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
             className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
             placeholder="Contoh: Action, Fantasy, Romance"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">Link Publikasi Webtoon/Kakaopage (Opsional)</label>
+          <input
+            {...register('link_publikasi')}
+            type="url"
+            className={`w-full px-4 py-2.5 rounded-xl border focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white ${errors.link_publikasi ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'}`}
+            placeholder="https://webtoons.com/..."
+          />
+          {errors.link_publikasi && <p className="mt-1.5 text-sm text-red-500">{errors.link_publikasi.message}</p>}
         </div>
 
         <div>

@@ -24,8 +24,15 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  // Studio Settings States
+  const [emailKontak, setEmailKontak] = useState('');
+  const [instagramUrl, setInstagramUrl] = useState('');
+  const [xUrl, setXUrl] = useState('');
+  const [savingStudioSettings, setSavingStudioSettings] = useState(false);
+
   useEffect(() => {
-    async function loadUser() {
+    async function loadData() {
+      // Load User Profile
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setNamaPena(user.user_metadata?.nama_pena || '');
@@ -34,9 +41,23 @@ export default function SettingsPage() {
         setAvatarUrl(user.user_metadata?.avatar_url || '');
         setPreviewUrl(user.user_metadata?.avatar_url || null);
       }
+
+      // Load Studio Settings
+      const { data: studioData, error: studioError } = await supabase
+        .from('studio_settings')
+        .select('*')
+        .eq('id', 1)
+        .single();
+      
+      if (!studioError && studioData) {
+        setEmailKontak(studioData.email_kontak || '');
+        setInstagramUrl(studioData.instagram_url || '');
+        setXUrl(studioData.x_url || '');
+      }
+
       setLoading(false);
     }
-    loadUser();
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -174,6 +195,29 @@ export default function SettingsPage() {
       toast.error(error.message || 'Gagal mengganti password', { id: toastId });
     } finally {
       setSavingPassword(false);
+    }
+  };
+
+  const handleSaveStudioSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingStudioSettings(true);
+    const toastId = toast.loading('Menyimpan pengaturan studio...');
+
+    try {
+      const { error } = await supabase.from('studio_settings').upsert({
+        id: 1,
+        email_kontak: emailKontak,
+        instagram_url: instagramUrl,
+        x_url: xUrl,
+        updated_at: new Date().toISOString()
+      });
+
+      if (error) throw error;
+      toast.success('Pengaturan studio berhasil diperbarui!', { id: toastId });
+    } catch (error: any) {
+      toast.error(error.message || 'Gagal menyimpan pengaturan studio', { id: toastId });
+    } finally {
+      setSavingStudioSettings(false);
     }
   };
 
@@ -335,6 +379,62 @@ export default function SettingsPage() {
                 </div>
               </form>
             </div>
+
+            {/* Pengaturan Studio Publik */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-fit lg:col-span-2">
+              <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
+                <Settings className="w-5 h-5 text-green-600" />
+                <h2 className="text-lg font-bold text-gray-900">Pengaturan Studio Publik (Kontak & Sosial Media)</h2>
+              </div>
+              <form onSubmit={handleSaveStudioSettings} className="p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Kontak</label>
+                    <input
+                      type="email"
+                      value={emailKontak}
+                      onChange={(e) => setEmailKontak(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                      placeholder="contoh: halo@mangastudio.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Instagram URL</label>
+                    <input
+                      type="url"
+                      value={instagramUrl}
+                      onChange={(e) => setInstagramUrl(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                      placeholder="https://instagram.com/..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">X (Twitter) URL</label>
+                    <input
+                      type="url"
+                      value={xUrl}
+                      onChange={(e) => setXUrl(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                      placeholder="https://x.com/..."
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={savingStudioSettings}
+                    className="px-6 py-2.5 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 disabled:opacity-70 transition-colors flex items-center justify-center gap-2 w-full md:w-auto"
+                  >
+                    {savingStudioSettings ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Check className="w-4 h-4" />}
+                    Simpan Pengaturan Publik
+                  </button>
+                </div>
+              </form>
+            </div>
+
           </div>
         </div>
       </main>
