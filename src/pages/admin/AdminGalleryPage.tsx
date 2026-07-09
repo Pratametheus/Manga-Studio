@@ -138,6 +138,15 @@ export default function AdminGalleryPage() {
         });
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
+        
+        // Delete old image if exists
+        if (formData.image_url) {
+          const urlParts = formData.image_url.split('/manga_assets/');
+          if (urlParts.length === 2) {
+            await supabase.storage.from('manga_assets').remove([urlParts[1]]);
+          }
+        }
+        
         finalImageUrl = data.publicUrl;
       }
 

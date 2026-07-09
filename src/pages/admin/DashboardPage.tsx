@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingManga, setEditingManga] = useState<ProjectManga | undefined>(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [mangaToDelete, setMangaToDelete] = useState<{id: string, title: string} | null>(null);
+  const [mangaToDelete, setMangaToDelete] = useState<{id: string, title: string, cover_url?: string | null} | null>(null);
 
   const fetchProjects = async () => {
     const { data } = await supabase.from('project_manga').select('*').order('created_at', { ascending: false });
@@ -39,6 +39,16 @@ export default function DashboardPage() {
     if (!mangaToDelete) return;
     
     const toastId = toast.loading('Menghapus...');
+
+    // Extract and delete cover from storage if exists
+    if (mangaToDelete.cover_url) {
+      const urlParts = mangaToDelete.cover_url.split('/manga_assets/');
+      if (urlParts.length === 2) {
+        const filePath = urlParts[1];
+        await supabase.storage.from('manga_assets').remove([filePath]);
+      }
+    }
+
     const { error } = await supabase.from('project_manga').delete().eq('id', mangaToDelete.id);
     
     if (error) {
@@ -137,16 +147,16 @@ export default function DashboardPage() {
               <h2 className="text-lg font-semibold text-gray-900">Daftar Project Manga</h2>
             </div>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-100">
-                <thead className="bg-gray-50/50">
+              <table className="w-full text-left">
+                <thead className="bg-gray-50/80 text-gray-500 text-xs font-semibold uppercase tracking-wider">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Judul Manga</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Target Pasar</th>
-                    <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Aksi</th>
+                    <th className="px-6 py-4 rounded-tl-xl whitespace-nowrap">Info Manga</th>
+                    <th className="px-6 py-4 whitespace-nowrap">Status</th>
+                    <th className="px-6 py-4 whitespace-nowrap">Target</th>
+                    <th className="px-6 py-4 rounded-tr-xl text-right whitespace-nowrap">Aksi</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100">
                   {projects.map((proj) => (
                     <tr key={proj.id} className="hover:bg-gray-50/80 transition-colors group">
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -187,7 +197,7 @@ export default function DashboardPage() {
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button 
-                            onClick={() => setMangaToDelete({ id: proj.id, title: proj.judul })}
+                            onClick={() => setMangaToDelete({ id: proj.id, title: proj.judul, cover_url: proj.cover_url })}
                             className="p-2 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Hapus"
                           >
@@ -199,6 +209,7 @@ export default function DashboardPage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
             {projects.length === 0 && (
               <div className="p-16 text-center text-gray-500 flex flex-col items-center">

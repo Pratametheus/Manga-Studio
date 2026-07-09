@@ -10,6 +10,7 @@ export function LandingSEOTab() {
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDesc, setSeoDesc] = useState('');
   const [seoImageUrl, setSeoImageUrl] = useState('');
+  const [originalSeoImageUrl, setOriginalSeoImageUrl] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -27,7 +28,9 @@ export function LandingSEOTab() {
     if (!error && data) {
       setSeoTitle(data.seo_title || 'MangaStudio | Official Portfolio');
       setSeoDesc(data.seo_description || 'Rumah produksi komik independen yang berdedikasi menciptakan kisah epik dengan standar visual tertinggi.');
-      setSeoImageUrl(data.seo_image_url || 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=2070');
+      const initialImage = data.seo_image_url || 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=2070';
+      setSeoImageUrl(initialImage);
+      setOriginalSeoImageUrl(initialImage);
     }
     setLoading(false);
   }
@@ -55,6 +58,15 @@ export function LandingSEOTab() {
         });
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('manga_assets').getPublicUrl(fileName);
+        
+        // Delete old image if exists
+        if (originalSeoImageUrl) {
+          const urlParts = originalSeoImageUrl.split('/manga_assets/');
+          if (urlParts.length === 2) {
+            await supabase.storage.from('manga_assets').remove([urlParts[1]]);
+          }
+        }
+
         finalImageUrl = data.publicUrl;
       }
 

@@ -108,6 +108,15 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
       try {
         const fileExt = selectedFile.name.split('.').pop();
         const fileName = `covers/${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+        
+        // Delete old cover if exists
+        if (initialData?.cover_url) {
+          const urlParts = initialData.cover_url.split('/manga_assets/');
+          if (urlParts.length === 2) {
+            await supabase.storage.from('manga_assets').remove([urlParts[1]]);
+          }
+        }
+
         const { error: uploadError } = await supabase.storage
           .from('manga_assets')
           .upload(fileName, selectedFile);
