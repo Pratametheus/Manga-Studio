@@ -18,7 +18,14 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors }, watch } = useForm();
+  
+  const peranSelect = watch('peran_select');
+  const ROLE_OPTIONS = [
+    'Protagonis Utama', 'Deuteragonis', 'Tritagonis', 
+    'Antagonis Utama', 'Pendukung / Sidekick', 'Mentor / Guru', 
+    'Bawahan Antagonis (Henchman)', 'Anti-Hero', 'Karakter Latar / Figuran'
+  ];
   
   const [fileFront, setFileFront] = useState<File | null>(null);
   const [previewFront, setPreviewFront] = useState<string | null>(null);
@@ -70,9 +77,9 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
 
   const openAddModal = () => {
     reset({
-      nama: '', peran: '', profil_detail: '',
+      nama: '', peran_select: 'Protagonis Utama', peran_custom: '', profil_detail: '',
       umur: '', tinggi_badan: '', berat_badan: '', ulang_tahun: '', golongan_darah: '',
-      kepribadian: '', kekuatan_senjata: '', kesukaan_ketidaksukaan: ''
+      kepribadian: '', kekuatan: '', senjata: '', keahlian: '', kesukaan: '', ketidaksukaan: ''
     });
     setEditingId(null);
     setFileFront(null); setPreviewFront(null);
@@ -82,11 +89,16 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
   };
 
   const openEditModal = (char: Character) => {
+    const isCustom = char.peran && !ROLE_OPTIONS.includes(char.peran);
     reset({
-      nama: char.nama, peran: char.peran, profil_detail: char.profil_detail,
+      nama: char.nama, 
+      peran_select: isCustom ? 'Lainnya...' : (char.peran || 'Protagonis Utama'), 
+      peran_custom: isCustom ? char.peran : '', 
+      profil_detail: char.profil_detail,
       umur: char.umur, tinggi_badan: char.tinggi_badan, berat_badan: char.berat_badan, ulang_tahun: char.ulang_tahun,
       golongan_darah: char.golongan_darah, kepribadian: char.kepribadian,
-      kekuatan_senjata: char.kekuatan_senjata, kesukaan_ketidaksukaan: char.kesukaan_ketidaksukaan
+      kekuatan: char.kekuatan || '', senjata: char.senjata || '', keahlian: char.keahlian || '',
+      kesukaan: char.kesukaan || '', ketidaksukaan: char.ketidaksukaan || ''
     });
     setEditingId(char.id);
     setFileFront(null); setPreviewFront(char.desain_visual_path);
@@ -134,6 +146,15 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
       };
 
       const payload: any = { ...formData };
+      
+      if (payload.peran_select === 'Lainnya...') {
+        payload.peran = payload.peran_custom;
+      } else {
+        payload.peran = payload.peran_select;
+      }
+      delete payload.peran_select;
+      delete payload.peran_custom;
+
       
       if (fileFront) {
         toast.loading('Mengunggah gambar utama...', { id: toastId });
@@ -335,8 +356,40 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
               <div className="space-y-6 flex-1 overflow-y-auto pr-2 pb-6 custom-scrollbar">
                 <Section title="Latar Belakang (Backstory)" content={selectedCharacter.profil_detail} />
                 <Section title="Kepribadian & Sifat" content={selectedCharacter.kepribadian} />
-                <Section title="Kekuatan / Senjata / Keahlian" content={selectedCharacter.kekuatan_senjata} />
-                <Section title="Kesukaan & Ketidaksukaan" content={selectedCharacter.kesukaan_ketidaksukaan} />
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Kekuatan / Sihir</h4>
+                    <p className="text-sm text-gray-700">{selectedCharacter.kekuatan || '-'}</p>
+                  </div>
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Senjata / Relik</h4>
+                    <p className="text-sm text-gray-700">{selectedCharacter.senjata || '-'}</p>
+                  </div>
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Keahlian (Skill)</h4>
+                    <p className="text-sm text-gray-700">{selectedCharacter.keahlian || '-'}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+                    <h4 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-2">Disukai (Likes)</h4>
+                    <p className="text-sm text-emerald-900">{selectedCharacter.kesukaan || '-'}</p>
+                  </div>
+                  <div className="bg-rose-50 rounded-xl p-4 border border-rose-100">
+                    <h4 className="text-xs font-bold text-rose-600 uppercase tracking-wider mb-2">Tidak Disukai (Dislikes)</h4>
+                    <p className="text-sm text-rose-900">{selectedCharacter.ketidaksukaan || '-'}</p>
+                  </div>
+                </div>
+                
+                {(selectedCharacter.kekuatan_senjata || selectedCharacter.kesukaan_ketidaksukaan) && (
+                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
+                    <h4 className="text-xs font-bold text-yellow-800 uppercase tracking-wider mb-2">Legacy Data (Data Lama)</h4>
+                    {selectedCharacter.kekuatan_senjata && <p className="text-sm text-yellow-900 mb-2"><b>Kekuatan/Senjata:</b> {selectedCharacter.kekuatan_senjata}</p>}
+                    {selectedCharacter.kesukaan_ketidaksukaan && <p className="text-sm text-yellow-900"><b>Kesukaan/Ketidaksukaan:</b> {selectedCharacter.kesukaan_ketidaksukaan}</p>}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -425,7 +478,15 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1.5">Peran (Role)</label>
-                  <input {...register('peran')} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium" placeholder="Contoh: Protagonis Utama" />
+                  <div className="flex gap-2">
+                    <select {...register('peran_select')} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium">
+                      {ROLE_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                      <option value="Lainnya...">Lainnya...</option>
+                    </select>
+                    {peranSelect === 'Lainnya...' && (
+                      <input {...register('peran_custom', { required: true })} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium" placeholder="Ketik peran spesifik..." />
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -457,14 +518,30 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
                 <textarea {...register('kepribadian')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Gampang marah, suka menolong, jenius tapi ceroboh..." />
               </div>
 
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">Kekuatan / Senjata / Keahlian</label>
-                <textarea {...register('kekuatan_senjata')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Menguasai pedang, elemen api, atau pintar meretas komputer..." />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Kekuatan (Power)</label>
+                  <textarea {...register('kekuatan')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Elemen api, sihir..." />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Senjata (Weapon)</label>
+                  <textarea {...register('senjata')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Pedang Excalibur..." />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Keahlian (Skill)</label>
+                  <textarea {...register('keahlian')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Meretas, memasak..." />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">Kesukaan & Ketidaksukaan</label>
-                <textarea {...register('kesukaan_ketidaksukaan')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Suka: Ramen. Tidak Suka: Orang yang ingkar janji." />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1.5 text-emerald-600">Kesukaan (Likes)</label>
+                  <textarea {...register('kesukaan')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-emerald-50/30 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Ramen, tidur siang..." />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1.5 text-rose-600">Ketidaksukaan (Dislikes)</label>
+                  <textarea {...register('ketidaksukaan')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none bg-rose-50/30 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Kecoa, orang sombong..." />
+                </div>
               </div>
 
               <div>

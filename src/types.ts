@@ -30,8 +30,13 @@ export interface Character {
   ulang_tahun?: string;
   golongan_darah?: string;
   kepribadian?: string;
-  kekuatan_senjata?: string;
-  kesukaan_ketidaksukaan?: string;
+  kekuatan_senjata?: string; // Legacy
+  kesukaan_ketidaksukaan?: string; // Legacy
+  kesukaan?: string;
+  ketidaksukaan?: string;
+  kekuatan?: string;
+  senjata?: string;
+  keahlian?: string;
   desain_visual_samping_path?: string;
   desain_visual_belakang_path?: string;
 }
