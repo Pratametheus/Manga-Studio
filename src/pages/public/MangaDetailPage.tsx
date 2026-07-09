@@ -5,6 +5,7 @@ import { ProjectManga, Character } from '../../types';
 import { PublicNavbar } from '../../components/public/PublicNavbar';
 import { PublicFooter } from '../../components/public/PublicFooter';
 import { ChevronLeft, ExternalLink, Users, BookOpen, Globe, X } from 'lucide-react';
+import { cn } from '../../lib/utils';
 import { SEO } from '../../components/SEO';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -133,7 +134,7 @@ export default function MangaDetailPage() {
                   {manga.judul}
                 </h1>
                 
-                <p className="text-xl md:text-2xl text-gray-300 font-medium max-w-3xl leading-relaxed">
+                <p className="text-xl md:text-2xl text-gray-200 font-medium max-w-3xl leading-relaxed border-l-4 border-yellow-400 pl-6 italic bg-white/5 py-4 px-6 rounded-r-xl shadow-lg">
                   {manga.logline}
                 </p>
                 
@@ -159,7 +160,7 @@ export default function MangaDetailPage() {
         <div className="max-w-6xl mx-auto px-6 lg:px-12 py-16 space-y-24">
           
           {/* Synopsis & World */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className={cn("grid gap-16", manga.sinopsis_lengkap && manga.world_building ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 max-w-5xl mx-auto")}>
             {manga.sinopsis_lengkap && (
               <motion.section
                 initial={{ opacity: 0, y: 30 }}
@@ -171,9 +172,9 @@ export default function MangaDetailPage() {
                   <BookOpen className="w-6 h-6 text-yellow-400" />
                   <h2 className="text-2xl font-black uppercase tracking-widest">Sinopsis</h2>
                 </div>
-                <div className="prose prose-invert prose-lg max-w-none text-gray-300 leading-relaxed">
+                <div className="space-y-6 text-lg text-gray-300 leading-relaxed font-serif bg-gray-900/40 p-8 md:p-10 rounded-3xl border border-white/5 shadow-2xl backdrop-blur-sm">
                   {manga.sinopsis_lengkap.split('\n').map((paragraph, idx) => (
-                    <p key={idx}>{paragraph}</p>
+                    paragraph.trim() && <p key={idx}>{paragraph}</p>
                   ))}
                 </div>
               </motion.section>
@@ -190,12 +191,10 @@ export default function MangaDetailPage() {
                   <Globe className="w-6 h-6 text-yellow-400" />
                   <h2 className="text-2xl font-black uppercase tracking-widest">World Building</h2>
                 </div>
-                <div className="p-8 bg-gray-900 rounded-2xl border border-white/5 shadow-inner">
-                  <div className="prose prose-invert max-w-none text-gray-300 leading-relaxed font-serif">
-                    {manga.world_building.split('\n').map((paragraph, idx) => (
-                      <p key={idx}>{paragraph}</p>
-                    ))}
-                  </div>
+                <div className="space-y-6 text-lg text-gray-300 leading-relaxed font-serif bg-gray-900/40 p-8 md:p-10 rounded-3xl border border-white/5 shadow-2xl backdrop-blur-sm">
+                  {manga.world_building.split('\n').map((paragraph, idx) => (
+                    paragraph.trim() && <p key={idx}>{paragraph}</p>
+                  ))}
                 </div>
               </motion.section>
             )}
