@@ -1,5 +1,5 @@
 import { ExternalLink } from 'lucide-react';
-import { ProjectManga } from '../../../types';
+import { ProjectManga } from '../../types';
 import { Link } from 'react-router-dom';
 
 interface MangaCardProps {

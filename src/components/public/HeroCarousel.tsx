@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ProjectManga } from '../../../types';
+import { ProjectManga } from '../../types';
 import { ExternalLink, Info, ChevronRight, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';

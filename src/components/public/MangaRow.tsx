@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { ProjectManga } from '../../../types';
+import { ProjectManga } from '../../types';
 import { MangaCard } from './MangaCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
