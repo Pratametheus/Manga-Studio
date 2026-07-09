@@ -209,7 +209,6 @@ export default function DashboardPage() {
                   ))}
                 </tbody>
               </table>
-              </div>
             </div>
             {projects.length === 0 && (
               <div className="p-16 text-center text-gray-500 flex flex-col items-center">
