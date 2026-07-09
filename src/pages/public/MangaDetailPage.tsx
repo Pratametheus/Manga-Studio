@@ -239,7 +239,7 @@ export default function MangaDetailPage() {
                     </div>
                     <div className="p-4 flex flex-col flex-1">
                       <h3 className="text-lg font-black text-white mb-1 group-hover:text-yellow-400 transition-colors line-clamp-1">{char.nama}</h3>
-                      <p className="text-xs text-gray-400 line-clamp-2 mt-auto">{char.kepribadian || char.profil_detail || 'Misterius.'}</p>
+                      <p className="text-xs text-gray-400 line-clamp-2 mt-auto">{char.jenis_kelamin || 'Rahasia'}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -303,6 +303,12 @@ export default function MangaDetailPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
+                  {selectedChar.jenis_kelamin && (
+                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                      <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Gender</span>
+                      <span className="text-white font-medium">{selectedChar.jenis_kelamin}</span>
+                    </div>
+                  )}
                   {selectedChar.umur && (
                     <div className="bg-black/30 p-3 rounded-xl border border-white/5">
                       <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Umur</span>
@@ -342,15 +348,45 @@ export default function MangaDetailPage() {
                       <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kepribadian}</p>
                     </div>
                   )}
+                  {selectedChar.kekuatan && (
+                    <div>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kekuatan (Power)</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kekuatan}</p>
+                    </div>
+                  )}
+                  {selectedChar.senjata && (
+                    <div>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Senjata (Weapon)</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.senjata}</p>
+                    </div>
+                  )}
+                  {selectedChar.keahlian && (
+                    <div>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Keahlian (Skill)</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.keahlian}</p>
+                    </div>
+                  )}
+                  {selectedChar.kesukaan && (
+                    <div>
+                      <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-2">Kesukaan (Likes)</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kesukaan}</p>
+                    </div>
+                  )}
+                  {selectedChar.ketidaksukaan && (
+                    <div>
+                      <h4 className="text-sm font-bold text-rose-400 uppercase tracking-widest mb-2">Ketidaksukaan (Dislikes)</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.ketidaksukaan}</p>
+                    </div>
+                  )}
                   {selectedChar.kekuatan_senjata && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kemampuan & Senjata</h4>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kemampuan & Senjata (Legacy)</h4>
                       <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kekuatan_senjata}</p>
                     </div>
                   )}
                   {selectedChar.kesukaan_ketidaksukaan && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kesukaan / Ketidaksukaan</h4>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kesukaan / Ketidaksukaan (Legacy)</h4>
                       <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kesukaan_ketidaksukaan}</p>
                     </div>
                   )}

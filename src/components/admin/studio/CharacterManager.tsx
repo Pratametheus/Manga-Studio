@@ -21,10 +21,16 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
   const { register, handleSubmit, reset, formState: { errors }, watch } = useForm();
   
   const peranSelect = watch('peran_select');
+  const jenisKelaminSelect = watch('jenis_kelamin_select');
+  
   const ROLE_OPTIONS = [
     'Protagonis Utama', 'Deuteragonis', 'Tritagonis', 
     'Antagonis Utama', 'Pendukung / Sidekick', 'Mentor / Guru', 
     'Bawahan Antagonis (Henchman)', 'Anti-Hero', 'Karakter Latar / Figuran'
+  ];
+
+  const GENDER_OPTIONS = [
+    'Laki-laki', 'Perempuan', 'Tanpa Gender (Genderless)', 'Dirahasiakan / Tidak Diketahui'
   ];
   
   const [fileFront, setFileFront] = useState<File | null>(null);
@@ -78,6 +84,7 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
   const openAddModal = () => {
     reset({
       nama: '', peran_select: 'Protagonis Utama', peran_custom: '', profil_detail: '',
+      jenis_kelamin_select: 'Laki-laki', jenis_kelamin_custom: '',
       umur: '', tinggi_badan: '', berat_badan: '', ulang_tahun: '', golongan_darah: '',
       kepribadian: '', kekuatan: '', senjata: '', keahlian: '', kesukaan: '', ketidaksukaan: ''
     });
@@ -90,10 +97,13 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
 
   const openEditModal = (char: Character) => {
     const isCustom = char.peran && !ROLE_OPTIONS.includes(char.peran);
+    const isGenderCustom = char.jenis_kelamin && !GENDER_OPTIONS.includes(char.jenis_kelamin);
     reset({
       nama: char.nama, 
       peran_select: isCustom ? 'Lainnya...' : (char.peran || 'Protagonis Utama'), 
       peran_custom: isCustom ? char.peran : '', 
+      jenis_kelamin_select: isGenderCustom ? 'Lainnya...' : (char.jenis_kelamin || 'Laki-laki'),
+      jenis_kelamin_custom: isGenderCustom ? char.jenis_kelamin : '',
       profil_detail: char.profil_detail,
       umur: char.umur, tinggi_badan: char.tinggi_badan, berat_badan: char.berat_badan, ulang_tahun: char.ulang_tahun,
       golongan_darah: char.golongan_darah, kepribadian: char.kepribadian,
@@ -154,6 +164,14 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
       }
       delete payload.peran_select;
       delete payload.peran_custom;
+
+      if (payload.jenis_kelamin_select === 'Lainnya...') {
+        payload.jenis_kelamin = payload.jenis_kelamin_custom;
+      } else {
+        payload.jenis_kelamin = payload.jenis_kelamin_select;
+      }
+      delete payload.jenis_kelamin_select;
+      delete payload.jenis_kelamin_custom;
 
       
       if (fileFront) {
@@ -345,7 +363,8 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+              <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 mb-8">
+                <StatBox label="Jenis Kelamin" value={selectedCharacter.jenis_kelamin} />
                 <StatBox label="Umur" value={selectedCharacter.umur} />
                 <StatBox label="Tinggi Badan" value={selectedCharacter.tinggi_badan} />
                 <StatBox label="Berat Badan" value={selectedCharacter.berat_badan} />
@@ -485,6 +504,18 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
                     </select>
                     {peranSelect === 'Lainnya...' && (
                       <input {...register('peran_custom', { required: true })} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium" placeholder="Ketik peran spesifik..." />
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Jenis Kelamin</label>
+                  <div className="flex gap-2">
+                    <select {...register('jenis_kelamin_select')} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium">
+                      {GENDER_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                      <option value="Lainnya...">Lainnya...</option>
+                    </select>
+                    {jenisKelaminSelect === 'Lainnya...' && (
+                      <input {...register('jenis_kelamin_custom', { required: true })} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium" placeholder="Ketik gender..." />
                     )}
                   </div>
                 </div>
