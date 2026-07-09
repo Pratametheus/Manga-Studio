@@ -147,7 +147,7 @@ export function KanbanManager({ mangaId }: KanbanManagerProps) {
         );
       })}
 
-      <Modal isOpen={!!selectedTask} onClose={() => setSelectedTask(null)} title={`Detail Tugas - Bab ${selectedTask?.bab}`} className="max-w-4xl h-[80vh] overflow-hidden flex flex-col p-0">
+      <Modal isOpen={!!selectedTask} onClose={() => setSelectedTask(null)} title={`Detail Tugas - Bab ${selectedTask?.bab}`} className="max-w-4xl">
         {selectedTask && (
           <TaskDetailContent 
             task={selectedTask} 
@@ -217,9 +217,9 @@ function TaskDetailContent({ task, mangaId, onUpdate }: { task: NaskahBab, manga
   };
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="bg-white -m-6">
       {/* Tabs */}
-      <div className="flex gap-4 border-b px-6 pt-4 bg-gray-50 flex-none overflow-x-auto">
+      <div className="flex gap-4 border-b px-6 pt-4 bg-gray-50 overflow-x-auto sticky top-0 z-20">
         <button onClick={() => setActiveTab('info')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'info' ? "border-indigo-600 text-indigo-600" : "border-transparent text-gray-500")}>Info & Naskah</button>
         <button onClick={() => setActiveTab('storyboard')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'storyboard' ? "border-indigo-600 text-indigo-600" : "border-transparent text-gray-500")}>Storyboard ({storyboards.length})</button>
         <button onClick={() => setActiveTab('inking')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'inking' ? "border-indigo-600 text-indigo-600" : "border-transparent text-gray-500")}>Inking / Lineart</button>
@@ -227,7 +227,7 @@ function TaskDetailContent({ task, mangaId, onUpdate }: { task: NaskahBab, manga
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="p-6">
         {activeTab === 'info' && (
           <div className="space-y-6">
             <div>
