@@ -38,6 +38,8 @@ export interface Character {
   senjata?: string;
   keahlian?: string;
   jenis_kelamin?: string;
+  motivasi?: string;
+  penampilan?: string;
   desain_visual_samping_path?: string;
   desain_visual_belakang_path?: string;
 }

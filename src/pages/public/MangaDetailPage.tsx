@@ -396,6 +396,18 @@ export default function MangaDetailPage() {
                       <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.profil_detail}</p>
                     </div>
                   )}
+                  {selectedChar.motivasi && (
+                    <div>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Motivasi & Tujuan</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.motivasi}</p>
+                    </div>
+                  )}
+                  {selectedChar.penampilan && (
+                    <div>
+                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Ciri Penampilan Khusus</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.penampilan}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

@@ -86,7 +86,8 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
       nama: '', peran_select: 'Protagonis Utama', peran_custom: '', profil_detail: '',
       jenis_kelamin_select: 'Laki-laki', jenis_kelamin_custom: '',
       umur: '', tinggi_badan: '', berat_badan: '', ulang_tahun: '', golongan_darah: '',
-      kepribadian: '', kekuatan: '', senjata: '', keahlian: '', kesukaan: '', ketidaksukaan: ''
+      kepribadian: '', kekuatan: '', senjata: '', keahlian: '', kesukaan: '', ketidaksukaan: '',
+      motivasi: '', penampilan: ''
     });
     setEditingId(null);
     setFileFront(null); setPreviewFront(null);
@@ -108,7 +109,8 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
       umur: char.umur, tinggi_badan: char.tinggi_badan, berat_badan: char.berat_badan, ulang_tahun: char.ulang_tahun,
       golongan_darah: char.golongan_darah, kepribadian: char.kepribadian,
       kekuatan: char.kekuatan || '', senjata: char.senjata || '', keahlian: char.keahlian || '',
-      kesukaan: char.kesukaan || '', ketidaksukaan: char.ketidaksukaan || ''
+      kesukaan: char.kesukaan || '', ketidaksukaan: char.ketidaksukaan || '',
+      motivasi: char.motivasi || '', penampilan: char.penampilan || ''
     });
     setEditingId(char.id);
     setFileFront(null); setPreviewFront(char.desain_visual_path);
@@ -374,6 +376,8 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
 
               <div className="space-y-6 flex-1 overflow-y-auto pr-2 pb-6 custom-scrollbar">
                 <Section title="Latar Belakang (Backstory)" content={selectedCharacter.profil_detail} />
+                <Section title="Motivasi / Tujuan" content={selectedCharacter.motivasi} />
+                <Section title="Ciri Penampilan Khusus" content={selectedCharacter.penampilan} />
                 <Section title="Kepribadian & Sifat" content={selectedCharacter.kepribadian} />
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -578,6 +582,17 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1.5">Latar Belakang (Backstory)</label>
                 <textarea {...register('profil_detail')} rows={5} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Lahir di desa terpencil, dia memulai petualangan untuk mencari ibunya..." />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Motivasi & Tujuan</label>
+                  <textarea {...register('motivasi')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Mencari pelaku yang membakar desanya..." />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Ciri Penampilan Khusus</label>
+                  <textarea {...register('penampilan')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Memiliki bekas luka bakar di mata kiri, selalu memakai syal merah..." />
+                </div>
               </div>
 
             </div>
