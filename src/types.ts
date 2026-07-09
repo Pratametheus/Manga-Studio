@@ -61,6 +61,8 @@ export interface NaskahBab {
   konten: string;
   status: string;
   tahap_produksi?: 'naskah' | 'storyboard' | 'inking' | 'coloring' | 'selesai';
+  inking_path?: string;
+  coloring_path?: string;
 }
 
 export interface FAQ {
