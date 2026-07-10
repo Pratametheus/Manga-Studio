@@ -612,21 +612,7 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
         </form>
       </Modal>
 
-      <style dangerouslySetInnerHTML={{__html: `
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background-color: #E5E7EB;
-          border-radius: 10px;
-        }
-        .custom-scrollbar:hover::-webkit-scrollbar-thumb {
-          background-color: #D1D5DB;
-        }
-      `}} />
+
     </div>
   );
 }

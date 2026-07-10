@@ -3,6 +3,7 @@ import { ProjectManga } from './types';
 export const mockProjects: ProjectManga[] = [
   {
     id: '1',
+    user_id: 'mock-user-123',
     judul: 'Samurai of the Cyber Void',
     logline: 'Seorang ronin yang terperangkap di dunia siber berjuang mencari jalan pulang di tengah konspirasi korporat.',
     tema: 'Cyberpunk, Action',
@@ -13,6 +14,7 @@ export const mockProjects: ProjectManga[] = [
   },
   {
     id: '2',
+    user_id: 'mock-user-123',
     judul: 'Whispers of the Spring Wind',
     logline: 'Kisah cinta manis antara dua siswa ekskul sastra yang saling menyembunyikan identitas penulis anonim mereka.',
     tema: 'Romance, Slice of Life',
@@ -23,6 +25,7 @@ export const mockProjects: ProjectManga[] = [
   },
   {
     id: '3',
+    user_id: 'mock-user-123',
     judul: 'Echoes of the Abyss',
     logline: 'Detektif swasta menyelidiki sekte misterius yang memuja entitas kuno dari dasar laut.',
     tema: 'Mystery, Psychological, Horror',
@@ -33,6 +36,7 @@ export const mockProjects: ProjectManga[] = [
   },
   {
     id: '4',
+    user_id: 'mock-user-123',
     judul: 'Midnight Cafe Confessions',
     logline: 'Empat wanita karier bertemu setiap malam di kafe untuk menceritakan kehidupan romansa dan karier mereka.',
     tema: 'Drama, Slice of Life',
