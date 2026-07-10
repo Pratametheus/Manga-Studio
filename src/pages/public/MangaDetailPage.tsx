@@ -103,7 +103,7 @@ export default function MangaDetailPage() {
               Kembali
             </Link>
             
-            <div className="flex flex-col md:flex-row gap-8 items-center md:items-end text-center md:text-left">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-start text-center md:text-left">
               <div 
                 onClick={() => setIsCoverModalOpen(true)}
                 className="w-48 md:w-64 shrink-0 rounded-2xl overflow-hidden shadow-2xl shadow-black border-2 border-white/10 relative group cursor-pointer"
