@@ -718,12 +718,12 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
                   </div>
                 )}
                 {settings?.show_ulang_tahun !== false && (
-                  <div className="flex-1 min-w-[120px]">
+                  <div className="flex-1 min-w-[160px]">
                     <div className="flex justify-between items-center mb-1.5">
                       <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest">Ultah</label>
-                      <label className="flex items-center gap-1 cursor-pointer" title="Sembunyikan tahun lahir di profil publik">
-                        <input type="checkbox" {...register('sembunyikan_tahun_lahir')} className="w-3 h-3 text-indigo-600 rounded border-gray-300" />
-                        <span className="text-[9px] text-gray-500 font-medium">Sembunyikan Tahun</span>
+                      <label className="flex items-center gap-1 cursor-pointer group" title="Sembunyikan tahun lahir di profil publik">
+                        <input type="checkbox" {...register('sembunyikan_tahun_lahir')} className="w-3 h-3 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" />
+                        <span className="text-[10px] text-gray-500 font-medium whitespace-nowrap group-hover:text-indigo-600 transition-colors">Rahasiakan Tahun</span>
                       </label>
                     </div>
                     <input type="date" {...register('ulang_tahun')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" />
