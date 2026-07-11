@@ -20,7 +20,6 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
   const [settings, setSettings] = useState<CharacterSettings | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { register, handleSubmit, reset, formState: { errors }, watch } = useForm();
   
