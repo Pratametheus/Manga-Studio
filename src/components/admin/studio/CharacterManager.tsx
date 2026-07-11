@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '../../../lib/supabase';
-import { Character } from '../../../types';
-import { Plus, Edit2, Trash2, Image as ImageIcon, Upload, Users, AlertCircle } from 'lucide-react';
+import { Character, CharacterSettings } from '../../../types';
+import { Plus, Edit2, Trash2, Image as ImageIcon, Upload, Users, AlertCircle, Settings } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Modal } from '../../ui/Modal';
 import { useForm } from 'react-hook-form';
@@ -15,7 +15,11 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
   
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
+  const [settings, setSettings] = useState<CharacterSettings | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { register, handleSubmit, reset, formState: { errors }, watch } = useForm();
@@ -75,6 +79,13 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
   const fetchCharacters = async () => {
     const { data } = await supabase.from('characters').select('*').eq('project_manga_id', mangaId).order('created_at', { ascending: false });
     setCharacters(data || []);
+
+    const { data: mangaData } = await supabase.from('project_manga').select('character_settings').eq('id', mangaId).single();
+    if (mangaData && mangaData.character_settings) {
+      setSettings(mangaData.character_settings);
+    } else {
+      setSettings({});
+    }
   };
 
   useEffect(() => {
@@ -240,17 +251,47 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
     </div>
   );
 
+  const saveSettings = async () => {
+    setIsSavingSettings(true);
+    const toastId = toast.loading('Menyimpan pengaturan kolom...');
+    try {
+      const { error } = await supabase.from('project_manga').update({ character_settings: settings }).eq('id', mangaId);
+      if (error) throw error;
+      toast.success('Pengaturan kolom berhasil disimpan!', { id: toastId });
+      setIsSettingsModalOpen(false);
+    } catch (error: any) {
+      toast.error(error.message || 'Gagal menyimpan pengaturan', { id: toastId });
+    } finally {
+      setIsSavingSettings(false);
+    }
+  };
+
+  const toggleSetting = (key: keyof CharacterSettings) => {
+    setSettings(prev => ({
+      ...prev,
+      [key]: prev?.[key] === false ? true : false
+    }));
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-gray-900">Character Sheets</h2>
-        <button 
-          onClick={openAddModal}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Tambah Karakter
-        </button>
+        <div className="flex gap-2">
+          <button 
+            onClick={() => setIsSettingsModalOpen(true)}
+            className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            title="Pengaturan Kolom Karakter"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={openAddModal}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 transition-colors"
+          >
+            <Plus className="w-5 h-5" /> Tambah Karakter
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -366,44 +407,54 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 mb-8">
-                <StatBox label="Jenis Kelamin" value={selectedCharacter.jenis_kelamin} />
-                <StatBox label="Umur" value={selectedCharacter.umur} />
-                <StatBox label="Tinggi Badan" value={selectedCharacter.tinggi_badan} />
-                <StatBox label="Berat Badan" value={selectedCharacter.berat_badan} />
-                <StatBox label="Tanggal Lahir" value={selectedCharacter.ulang_tahun} />
-                <StatBox label="Gol. Darah" value={selectedCharacter.golongan_darah} />
+                {settings?.show_jenis_kelamin !== false && <StatBox label="Jenis Kelamin" value={selectedCharacter.jenis_kelamin} />}
+                {settings?.show_umur !== false && <StatBox label="Umur" value={selectedCharacter.umur} />}
+                {settings?.show_tinggi_badan !== false && <StatBox label="Tinggi Badan" value={selectedCharacter.tinggi_badan} />}
+                {settings?.show_berat_badan !== false && <StatBox label="Berat Badan" value={selectedCharacter.berat_badan} />}
+                {settings?.show_ulang_tahun !== false && <StatBox label="Tanggal Lahir" value={selectedCharacter.ulang_tahun} />}
+                {settings?.show_golongan_darah !== false && <StatBox label="Gol. Darah" value={selectedCharacter.golongan_darah} />}
               </div>
 
               <div className="space-y-6 flex-1 overflow-y-auto pr-2 pb-6 custom-scrollbar">
                 <Section title="Latar Belakang (Backstory)" content={selectedCharacter.profil_detail} />
-                <Section title="Motivasi / Tujuan" content={selectedCharacter.motivasi} />
-                <Section title="Ciri Penampilan Khusus" content={selectedCharacter.penampilan} />
-                <Section title="Kepribadian & Sifat" content={selectedCharacter.kepribadian} />
+                {settings?.show_motivasi !== false && <Section title="Motivasi / Tujuan" content={selectedCharacter.motivasi} />}
+                {settings?.show_penampilan !== false && <Section title="Ciri Penampilan Khusus" content={selectedCharacter.penampilan} />}
+                {settings?.show_kepribadian !== false && <Section title="Kepribadian & Sifat" content={selectedCharacter.kepribadian} />}
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Kekuatan / Sihir</h4>
-                    <p className="text-sm text-gray-700">{selectedCharacter.kekuatan || '-'}</p>
-                  </div>
-                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Senjata / Relik</h4>
-                    <p className="text-sm text-gray-700">{selectedCharacter.senjata || '-'}</p>
-                  </div>
-                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Keahlian (Skill)</h4>
-                    <p className="text-sm text-gray-700">{selectedCharacter.keahlian || '-'}</p>
-                  </div>
+                  {settings?.show_kekuatan !== false && (
+                    <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                      <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Kekuatan / Sihir</h4>
+                      <p className="text-sm text-gray-700">{selectedCharacter.kekuatan || '-'}</p>
+                    </div>
+                  )}
+                  {settings?.show_senjata !== false && (
+                    <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                      <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Senjata / Relik</h4>
+                      <p className="text-sm text-gray-700">{selectedCharacter.senjata || '-'}</p>
+                    </div>
+                  )}
+                  {settings?.show_keahlian !== false && (
+                    <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                      <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Keahlian (Skill)</h4>
+                      <p className="text-sm text-gray-700">{selectedCharacter.keahlian || '-'}</p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
-                    <h4 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-2">Disukai (Likes)</h4>
-                    <p className="text-sm text-emerald-900">{selectedCharacter.kesukaan || '-'}</p>
-                  </div>
-                  <div className="bg-rose-50 rounded-xl p-4 border border-rose-100">
-                    <h4 className="text-xs font-bold text-rose-600 uppercase tracking-wider mb-2">Tidak Disukai (Dislikes)</h4>
-                    <p className="text-sm text-rose-900">{selectedCharacter.ketidaksukaan || '-'}</p>
-                  </div>
+                  {settings?.show_kesukaan !== false && (
+                    <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+                      <h4 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-2">Disukai (Likes)</h4>
+                      <p className="text-sm text-emerald-900">{selectedCharacter.kesukaan || '-'}</p>
+                    </div>
+                  )}
+                  {settings?.show_ketidaksukaan !== false && (
+                    <div className="bg-rose-50 rounded-xl p-4 border border-rose-100">
+                      <h4 className="text-xs font-bold text-rose-600 uppercase tracking-wider mb-2">Tidak Disukai (Dislikes)</h4>
+                      <p className="text-sm text-rose-900">{selectedCharacter.ketidaksukaan || '-'}</p>
+                    </div>
+                  )}
                 </div>
                 
                 {(selectedCharacter.kekuatan_senjata || selectedCharacter.kesukaan_ketidaksukaan) && (
@@ -511,72 +562,96 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
                     )}
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Jenis Kelamin</label>
-                  <div className="flex gap-2">
-                    <select {...register('jenis_kelamin_select')} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium">
-                      {GENDER_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                      <option value="Lainnya...">Lainnya...</option>
-                    </select>
-                    {jenisKelaminSelect === 'Lainnya...' && (
-                      <input {...register('jenis_kelamin_custom', { required: true })} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium" placeholder="Ketik gender..." />
-                    )}
+                {settings?.show_jenis_kelamin !== false && (
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1.5">Jenis Kelamin</label>
+                    <div className="flex gap-2">
+                      <select {...register('jenis_kelamin_select')} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium">
+                        {GENDER_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                        <option value="Lainnya...">Lainnya...</option>
+                      </select>
+                      {jenisKelaminSelect === 'Lainnya...' && (
+                        <input {...register('jenis_kelamin_custom')} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium" placeholder="Ketik gender..." />
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
-              <div className="p-4 bg-gray-50 border border-gray-100 rounded-2xl grid grid-cols-2 sm:grid-cols-5 gap-4">
-                <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Umur</label>
-                  <input {...register('umur')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="17" />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Tinggi (cm)</label>
-                  <input {...register('tinggi_badan')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="175" />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Berat (kg)</label>
-                  <input {...register('berat_badan')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="60" />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Ultah</label>
-                  <input {...register('ulang_tahun')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="10 Okt" />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Darah</label>
-                  <input {...register('golongan_darah')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="O/A/B/AB" />
-                </div>
+              <div className="p-4 bg-gray-50 border border-gray-100 rounded-2xl flex flex-wrap gap-4">
+                {settings?.show_umur !== false && (
+                  <div className="flex-1 min-w-[80px]">
+                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Umur</label>
+                    <input {...register('umur')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="17" />
+                  </div>
+                )}
+                {settings?.show_tinggi_badan !== false && (
+                  <div className="flex-1 min-w-[80px]">
+                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Tinggi (cm)</label>
+                    <input {...register('tinggi_badan')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="175" />
+                  </div>
+                )}
+                {settings?.show_berat_badan !== false && (
+                  <div className="flex-1 min-w-[80px]">
+                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Berat (kg)</label>
+                    <input {...register('berat_badan')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="60" />
+                  </div>
+                )}
+                {settings?.show_ulang_tahun !== false && (
+                  <div className="flex-1 min-w-[80px]">
+                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Ultah</label>
+                    <input {...register('ulang_tahun')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="10 Okt" />
+                  </div>
+                )}
+                {settings?.show_golongan_darah !== false && (
+                  <div className="flex-1 min-w-[80px]">
+                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Darah</label>
+                    <input {...register('golongan_darah')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="O/A/B/AB" />
+                  </div>
+                )}
               </div>
 
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">Kepribadian & Sifat</label>
-                <textarea {...register('kepribadian')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Gampang marah, suka menolong, jenius tapi ceroboh..." />
-              </div>
+              {settings?.show_kepribadian !== false && (
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Kepribadian & Sifat</label>
+                  <textarea {...register('kepribadian')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Gampang marah, suka menolong, jenius tapi ceroboh..." />
+                </div>
+              )}
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Kekuatan (Power)</label>
-                  <textarea {...register('kekuatan')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Elemen api, sihir..." />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Senjata (Weapon)</label>
-                  <textarea {...register('senjata')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Pedang Excalibur..." />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Keahlian (Skill)</label>
-                  <textarea {...register('keahlian')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Meretas, memasak..." />
-                </div>
+                {settings?.show_kekuatan !== false && (
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1.5">Kekuatan (Power)</label>
+                    <textarea {...register('kekuatan')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Elemen api, sihir..." />
+                  </div>
+                )}
+                {settings?.show_senjata !== false && (
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1.5">Senjata (Weapon)</label>
+                    <textarea {...register('senjata')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Pedang Excalibur..." />
+                  </div>
+                )}
+                {settings?.show_keahlian !== false && (
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1.5">Keahlian (Skill)</label>
+                    <textarea {...register('keahlian')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Meretas, memasak..." />
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5 text-emerald-600">Kesukaan (Likes)</label>
-                  <textarea {...register('kesukaan')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-emerald-50/30 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Ramen, tidur siang..." />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5 text-rose-600">Ketidaksukaan (Dislikes)</label>
-                  <textarea {...register('ketidaksukaan')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none bg-rose-50/30 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Kecoa, orang sombong..." />
-                </div>
+                {settings?.show_kesukaan !== false && (
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1.5 text-emerald-600">Kesukaan (Likes)</label>
+                    <textarea {...register('kesukaan')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-emerald-50/30 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Ramen, tidur siang..." />
+                  </div>
+                )}
+                {settings?.show_ketidaksukaan !== false && (
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1.5 text-rose-600">Ketidaksukaan (Dislikes)</label>
+                    <textarea {...register('ketidaksukaan')} rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none bg-rose-50/30 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Kecoa, orang sombong..." />
+                  </div>
+                )}
               </div>
 
               <div>
@@ -585,14 +660,18 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Motivasi & Tujuan</label>
-                  <textarea {...register('motivasi')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Mencari pelaku yang membakar desanya..." />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">Ciri Penampilan Khusus</label>
-                  <textarea {...register('penampilan')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Memiliki bekas luka bakar di mata kiri, selalu memakai syal merah..." />
-                </div>
+                {settings?.show_motivasi !== false && (
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1.5">Motivasi & Tujuan</label>
+                    <textarea {...register('motivasi')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Mencari pelaku yang membakar desanya..." />
+                  </div>
+                )}
+                {settings?.show_penampilan !== false && (
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1.5">Ciri Penampilan Khusus</label>
+                    <textarea {...register('penampilan')} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" placeholder="Memiliki bekas luka bakar di mata kiri, selalu memakai syal merah..." />
+                  </div>
+                )}
               </div>
 
             </div>
@@ -612,6 +691,52 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
         </form>
       </Modal>
 
+      {/* SETTINGS MODAL */}
+      <Modal isOpen={isSettingsModalOpen} onClose={() => setIsSettingsModalOpen(false)} title="Pengaturan Kolom Karakter" className="max-w-lg">
+        <div className="space-y-4">
+          <p className="text-sm text-gray-500 mb-4">Centang kolom-kolom yang ingin ditampilkan khusus untuk karakter di proyek ini.</p>
+          
+          <div className="grid grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+            {[
+              { key: 'show_jenis_kelamin', label: 'Jenis Kelamin' },
+              { key: 'show_umur', label: 'Umur' },
+              { key: 'show_tinggi_badan', label: 'Tinggi Badan' },
+              { key: 'show_berat_badan', label: 'Berat Badan' },
+              { key: 'show_ulang_tahun', label: 'Tanggal Lahir / Ultah' },
+              { key: 'show_golongan_darah', label: 'Golongan Darah' },
+              { key: 'show_kepribadian', label: 'Kepribadian & Sifat' },
+              { key: 'show_kekuatan', label: 'Kekuatan / Sihir' },
+              { key: 'show_senjata', label: 'Senjata / Relik' },
+              { key: 'show_keahlian', label: 'Keahlian (Skill)' },
+              { key: 'show_kesukaan', label: 'Kesukaan (Likes)' },
+              { key: 'show_ketidaksukaan', label: 'Ketidaksukaan (Dislikes)' },
+              { key: 'show_motivasi', label: 'Motivasi & Tujuan' },
+              { key: 'show_penampilan', label: 'Ciri Penampilan Khusus' },
+            ].map(field => (
+              <label key={field.key} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 cursor-pointer hover:bg-indigo-50 transition-colors">
+                <input 
+                  type="checkbox" 
+                  checked={settings?.[field.key as keyof CharacterSettings] !== false}
+                  onChange={() => toggleSetting(field.key as keyof CharacterSettings)}
+                  className="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
+                />
+                <span className="text-sm font-medium text-gray-700">{field.label}</span>
+              </label>
+            ))}
+          </div>
+
+          <div className="pt-4 mt-4 border-t border-gray-100 flex justify-end">
+            <button
+              onClick={saveSettings}
+              disabled={isSavingSettings}
+              className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 disabled:opacity-70 transition-colors flex items-center gap-2"
+            >
+              {isSavingSettings ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : null}
+              Simpan Pengaturan
+            </button>
+          </div>
+        </div>
+      </Modal>
 
     </div>
   );

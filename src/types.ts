@@ -1,5 +1,22 @@
 export type TargetPasar = 'shonen' | 'shojo' | 'seinen' | 'josei';
 
+export interface CharacterSettings {
+  show_umur?: boolean;
+  show_tinggi_badan?: boolean;
+  show_berat_badan?: boolean;
+  show_ulang_tahun?: boolean;
+  show_golongan_darah?: boolean;
+  show_jenis_kelamin?: boolean;
+  show_kepribadian?: boolean;
+  show_kesukaan?: boolean;
+  show_ketidaksukaan?: boolean;
+  show_motivasi?: boolean;
+  show_kekuatan?: boolean;
+  show_senjata?: boolean;
+  show_keahlian?: boolean;
+  show_penampilan?: boolean;
+}
+
 export interface ProjectManga {
   id: string;
   user_id: string;
@@ -15,6 +32,7 @@ export interface ProjectManga {
   is_featured?: boolean;
   created_at?: string;
   updated_at?: string;
+  character_settings?: CharacterSettings;
 }
 
 export interface Character {
