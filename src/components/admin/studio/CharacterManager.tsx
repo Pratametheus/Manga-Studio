@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '../../../lib/supabase';
-import { Character, CharacterSettings } from '../../../types';
+import { Character, CharacterSettings, CustomFieldDef } from '../../../types';
 import { Plus, Edit2, Trash2, Image as ImageIcon, Upload, Users, AlertCircle, Settings } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Modal } from '../../ui/Modal';
@@ -10,14 +10,35 @@ interface CharacterManagerProps {
   mangaId: string;
 }
 
+const formatTanggalLahir = (dateStr?: string, hideYear?: boolean) => {
+  if (!dateStr) return '-';
+  const dateObj = new Date(dateStr);
+  if (!isNaN(dateObj.getTime())) {
+    const options: Intl.DateTimeFormatOptions = hideYear 
+      ? { day: 'numeric', month: 'long' }
+      : { day: 'numeric', month: 'long', year: 'numeric' };
+    return dateObj.toLocaleDateString('id-ID', options);
+  }
+  return dateStr;
+};
+
 export function CharacterManager({ mangaId }: CharacterManagerProps) {
   const [characters, setCharacters] = useState<Character[]>([]);
   
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isCustomFieldModalOpen, setIsCustomFieldModalOpen] = useState(false);
+  
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [settings, setSettings] = useState<CharacterSettings | null>(null);
+  
+  const [editingCustomField, setEditingCustomField] = useState<CustomFieldDef | null>(null);
+  const [customFieldForm, setCustomFieldForm] = useState<CustomFieldDef>({ id: '', label: '', type: 'text' });
+  
+  const [customFiles, setCustomFiles] = useState<Record<string, File>>({});
+  const [customPreviews, setCustomPreviews] = useState<Record<string, string>>({});
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   
@@ -97,19 +118,21 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
       jenis_kelamin_select: 'Laki-laki', jenis_kelamin_custom: '',
       umur: '', tinggi_badan: '', berat_badan: '', ulang_tahun: '', golongan_darah: '',
       kepribadian: '', kekuatan: '', senjata: '', keahlian: '', kesukaan: '', ketidaksukaan: '',
-      motivasi: '', penampilan: ''
+      motivasi: '', penampilan: '', sembunyikan_tahun_lahir: false
     });
     setEditingId(null);
     setFileFront(null); setPreviewFront(null);
     setFileSide(null); setPreviewSide(null);
     setFileBack(null); setPreviewBack(null);
+    setCustomFiles({}); setCustomPreviews({});
     setIsFormModalOpen(true);
   };
 
   const openEditModal = (char: Character) => {
     const isCustom = char.peran && !ROLE_OPTIONS.includes(char.peran);
     const isGenderCustom = char.jenis_kelamin && !GENDER_OPTIONS.includes(char.jenis_kelamin);
-    reset({
+    
+    const initialData: any = {
       nama: char.nama, 
       peran_select: isCustom ? 'Lainnya...' : (char.peran || 'Protagonis Utama'), 
       peran_custom: isCustom ? char.peran : '', 
@@ -120,12 +143,27 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
       golongan_darah: char.golongan_darah, kepribadian: char.kepribadian,
       kekuatan: char.kekuatan || '', senjata: char.senjata || '', keahlian: char.keahlian || '',
       kesukaan: char.kesukaan || '', ketidaksukaan: char.ketidaksukaan || '',
-      motivasi: char.motivasi || '', penampilan: char.penampilan || ''
-    });
+      motivasi: char.motivasi || '', penampilan: char.penampilan || '',
+      sembunyikan_tahun_lahir: char.sembunyikan_tahun_lahir || false
+    };
+
+    const initPreviews: Record<string, string> = {};
+    if (char.custom_data) {
+      settings?.custom_fields?.forEach(f => {
+        if (f.type !== 'image') {
+          initialData[`custom_data_${f.id}`] = char.custom_data![f.id] || '';
+        } else if (char.custom_data![f.id]) {
+          initPreviews[f.id] = char.custom_data![f.id];
+        }
+      });
+    }
+
+    reset(initialData);
     setEditingId(char.id);
     setFileFront(null); setPreviewFront(char.desain_visual_path);
     setFileSide(null); setPreviewSide(char.desain_visual_samping_path || null);
     setFileBack(null); setPreviewBack(char.desain_visual_belakang_path || null);
+    setCustomFiles({}); setCustomPreviews(initPreviews);
     setIsDetailModalOpen(false);
     setIsFormModalOpen(true);
   };
@@ -199,6 +237,30 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
         payload.desain_visual_belakang_path = await uploadImage(fileBack);
       }
 
+      let customData: Record<string, any> = {};
+      if (settings?.custom_fields) {
+        for (const field of settings.custom_fields) {
+          if (field.type !== 'image') {
+            const val = payload[`custom_data_${field.id}`];
+            if (val !== undefined) {
+              customData[field.id] = val;
+            }
+            delete payload[`custom_data_${field.id}`];
+          } else {
+            if (customFiles[field.id]) {
+              toast.loading(`Mengunggah ${field.label}...`, { id: toastId });
+              customData[field.id] = await uploadImage(customFiles[field.id]);
+            } else if (editingId) {
+              const char = characters.find(c => c.id === editingId);
+              if (char?.custom_data && char.custom_data[field.id]) {
+                customData[field.id] = char.custom_data[field.id];
+              }
+            }
+          }
+        }
+      }
+      payload.custom_data = customData;
+
       toast.loading('Menyimpan data...', { id: toastId });
 
       if (editingId) {
@@ -270,6 +332,36 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
       ...prev,
       [key]: prev?.[key] === false ? true : false
     }));
+  };
+
+  const handleDeleteCustomField = (id: string) => {
+    if (window.confirm('Hapus kolom kustom ini? Data pada kolom ini di semua karakter mungkin tidak akan ditampilkan lagi.')) {
+      setSettings(prev => ({
+        ...prev,
+        custom_fields: prev?.custom_fields?.filter(f => f.id !== id)
+      }));
+    }
+  };
+
+  const handleSaveCustomField = () => {
+    if (!customFieldForm.label.trim()) return toast.error('Nama kolom tidak boleh kosong');
+    
+    setSettings(prev => {
+      const currentFields = prev?.custom_fields || [];
+      if (editingCustomField) {
+        return {
+          ...prev,
+          custom_fields: currentFields.map(f => f.id === editingCustomField.id ? { ...customFieldForm } : f)
+        };
+      } else {
+        const newId = 'custom_' + Date.now();
+        return {
+          ...prev,
+          custom_fields: [...currentFields, { ...customFieldForm, id: newId }]
+        };
+      }
+    });
+    setIsCustomFieldModalOpen(false);
   };
 
   return (
@@ -410,7 +502,7 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
                 {settings?.show_umur !== false && <StatBox label="Umur" value={selectedCharacter.umur} />}
                 {settings?.show_tinggi_badan !== false && <StatBox label="Tinggi Badan" value={selectedCharacter.tinggi_badan} />}
                 {settings?.show_berat_badan !== false && <StatBox label="Berat Badan" value={selectedCharacter.berat_badan} />}
-                {settings?.show_ulang_tahun !== false && <StatBox label="Tanggal Lahir" value={selectedCharacter.ulang_tahun} />}
+                {settings?.show_ulang_tahun !== false && <StatBox label="Tanggal Lahir" value={formatTanggalLahir(selectedCharacter.ulang_tahun, selectedCharacter.sembunyikan_tahun_lahir)} />}
                 {settings?.show_golongan_darah !== false && <StatBox label="Gol. Darah" value={selectedCharacter.golongan_darah} />}
               </div>
 
@@ -461,6 +553,35 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
                     <h4 className="text-xs font-bold text-yellow-800 uppercase tracking-wider mb-2">Legacy Data (Data Lama)</h4>
                     {selectedCharacter.kekuatan_senjata && <p className="text-sm text-yellow-900 mb-2"><b>Kekuatan/Senjata:</b> {selectedCharacter.kekuatan_senjata}</p>}
                     {selectedCharacter.kesukaan_ketidaksukaan && <p className="text-sm text-yellow-900"><b>Kesukaan/Ketidaksukaan:</b> {selectedCharacter.kesukaan_ketidaksukaan}</p>}
+                  </div>
+                )}
+
+                {settings?.custom_fields && settings.custom_fields.length > 0 && (
+                  <div className="pt-6 border-t border-gray-100 mt-6">
+                    <h4 className="text-sm font-bold text-gray-900 mb-4">Data Kustom</h4>
+                    <div className="space-y-6">
+                      {settings.custom_fields.map(cf => {
+                        const val = selectedCharacter.custom_data?.[cf.id];
+                        if (!val) return null;
+                        
+                        if (cf.type === 'text' || cf.type === 'textarea') {
+                          return <Section key={cf.id} title={cf.label} content={val} />;
+                        } else if (cf.type === 'image') {
+                          return (
+                            <div key={cf.id}>
+                              <h4 className="text-sm font-bold text-indigo-600 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" />
+                                {cf.label}
+                              </h4>
+                              <div className="w-48 h-48 bg-gray-50 rounded-xl overflow-hidden border border-gray-200 shadow-sm cursor-pointer hover:opacity-90 transition-opacity" onClick={() => window.open(val, '_blank')}>
+                                <img src={val} alt={cf.label} className="w-full h-full object-cover" />
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
                   </div>
                 )}
               </div>
@@ -597,9 +718,15 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
                   </div>
                 )}
                 {settings?.show_ulang_tahun !== false && (
-                  <div className="flex-1 min-w-[80px]">
-                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Ultah</label>
-                    <input {...register('ulang_tahun')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" placeholder="10 Okt" />
+                  <div className="flex-1 min-w-[120px]">
+                    <div className="flex justify-between items-center mb-1.5">
+                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest">Ultah</label>
+                      <label className="flex items-center gap-1 cursor-pointer" title="Sembunyikan tahun lahir di profil publik">
+                        <input type="checkbox" {...register('sembunyikan_tahun_lahir')} className="w-3 h-3 text-indigo-600 rounded border-gray-300" />
+                        <span className="text-[9px] text-gray-500 font-medium">Sembunyikan Tahun</span>
+                      </label>
+                    </div>
+                    <input type="date" {...register('ulang_tahun')} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-sm" />
                   </div>
                 )}
                 {settings?.show_golongan_darah !== false && (
@@ -673,6 +800,57 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
                 )}
               </div>
 
+              {settings?.custom_fields && settings.custom_fields.length > 0 && (
+                <div className="pt-4 mt-2 border-t border-gray-100 space-y-4">
+                  <h4 className="text-sm font-bold text-gray-900">Data Kustom</h4>
+                  {settings.custom_fields.map(cf => {
+                    if (cf.type === 'text') {
+                      return (
+                        <div key={cf.id}>
+                          <label className="block text-sm font-bold text-gray-700 mb-1.5">{cf.label}</label>
+                          <input {...register(`custom_data_${cf.id}`)} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium" />
+                        </div>
+                      )
+                    } else if (cf.type === 'textarea') {
+                      return (
+                        <div key={cf.id}>
+                          <label className="block text-sm font-bold text-gray-700 mb-1.5">{cf.label}</label>
+                          <textarea {...register(`custom_data_${cf.id}`)} rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white resize-none text-sm leading-relaxed" />
+                        </div>
+                      )
+                    } else if (cf.type === 'image') {
+                      return (
+                        <div key={cf.id}>
+                          <label className="block text-sm font-bold text-gray-700 mb-1.5">{cf.label}</label>
+                          <div className="flex items-center gap-4">
+                            <div className="w-24 h-24 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden">
+                              {customPreviews[cf.id] ? (
+                                <img src={customPreviews[cf.id]} className="w-full h-full object-cover" />
+                              ) : (
+                                <ImageIcon className="w-8 h-8 text-gray-300" />
+                              )}
+                            </div>
+                            <input 
+                              type="file" 
+                              accept="image/*"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  const file = e.target.files[0];
+                                  setCustomFiles(prev => ({ ...prev, [cf.id]: file }));
+                                  setCustomPreviews(prev => ({ ...prev, [cf.id]: URL.createObjectURL(file) }));
+                                }
+                              }}
+                              className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                            />
+                          </div>
+                        </div>
+                      )
+                    }
+                    return null;
+                  })}
+                </div>
+              )}
+
             </div>
 
             <div className="pt-4 mt-4 border-t border-gray-100 flex justify-end shrink-0">
@@ -724,6 +902,36 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
             ))}
           </div>
 
+          <div className="mt-6 border-t border-gray-100 pt-4">
+            <div className="flex justify-between items-center mb-4">
+              <h4 className="text-sm font-bold text-gray-900">Kolom Kustom (Custom Fields)</h4>
+              <button 
+                onClick={() => { setEditingCustomField(null); setCustomFieldForm({ id: '', label: '', type: 'text' }); setIsCustomFieldModalOpen(true); }}
+                className="text-xs font-medium text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+              >
+                <Plus className="w-3 h-3" /> Tambah Kolom
+              </button>
+            </div>
+            <div className="space-y-2">
+              {settings?.custom_fields && settings.custom_fields.length > 0 ? (
+                settings.custom_fields.map(cf => (
+                  <div key={cf.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">{cf.label}</p>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{cf.type}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => { setEditingCustomField(cf); setCustomFieldForm(cf); setIsCustomFieldModalOpen(true); }} className="text-gray-400 hover:text-indigo-600 transition-colors p-1"><Edit2 className="w-4 h-4" /></button>
+                      <button onClick={() => handleDeleteCustomField(cf.id)} className="text-gray-400 hover:text-rose-600 transition-colors p-1"><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-center text-gray-400 italic py-4">Belum ada kolom kustom.</p>
+              )}
+            </div>
+          </div>
+
           <div className="pt-4 mt-4 border-t border-gray-100 flex justify-end">
             <button
               onClick={saveSettings}
@@ -732,6 +940,40 @@ export function CharacterManager({ mangaId }: CharacterManagerProps) {
             >
               {isSavingSettings ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : null}
               Simpan Pengaturan
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* CUSTOM FIELD FORM MODAL */}
+      <Modal isOpen={isCustomFieldModalOpen} onClose={() => setIsCustomFieldModalOpen(false)} title={editingCustomField ? "Edit Kolom Kustom" : "Tambah Kolom Kustom"} className="max-w-md">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-1.5">Nama Kolom (Label)</label>
+            <input 
+              type="text" 
+              value={customFieldForm.label}
+              onChange={(e) => setCustomFieldForm({...customFieldForm, label: e.target.value})}
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium" 
+              placeholder="Contoh: Zodiak, Senjata Spesial..." 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-1.5">Tipe Kolom</label>
+            <select 
+              value={customFieldForm.type}
+              onChange={(e) => setCustomFieldForm({...customFieldForm, type: e.target.value as any})}
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none bg-gray-50/50 focus:bg-white transition-all font-medium"
+            >
+              <option value="text">Teks Pendek (1 Baris)</option>
+              <option value="textarea">Teks Panjang (Paragraf)</option>
+              <option value="image">Gambar (Upload)</option>
+            </select>
+          </div>
+          <div className="pt-4 mt-4 border-t border-gray-100 flex justify-end gap-2">
+            <button onClick={() => setIsCustomFieldModalOpen(false)} className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors">Batal</button>
+            <button onClick={handleSaveCustomField} className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 transition-colors">
+              {editingCustomField ? 'Simpan Perubahan' : 'Tambah Kolom'}
             </button>
           </div>
         </div>

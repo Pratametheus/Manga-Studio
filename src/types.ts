@@ -1,5 +1,11 @@
 export type TargetPasar = 'shonen' | 'shojo' | 'seinen' | 'josei';
 
+export interface CustomFieldDef {
+  id: string;
+  label: string;
+  type: 'text' | 'textarea' | 'image';
+}
+
 export interface CharacterSettings {
   show_umur?: boolean;
   show_tinggi_badan?: boolean;
@@ -15,6 +21,7 @@ export interface CharacterSettings {
   show_senjata?: boolean;
   show_keahlian?: boolean;
   show_penampilan?: boolean;
+  custom_fields?: CustomFieldDef[];
 }
 
 export interface ProjectManga {
@@ -60,6 +67,8 @@ export interface Character {
   penampilan?: string;
   desain_visual_samping_path?: string;
   desain_visual_belakang_path?: string;
+  sembunyikan_tahun_lahir?: boolean;
+  custom_data?: Record<string, any>;
 }
 
 export interface Storyboard {
