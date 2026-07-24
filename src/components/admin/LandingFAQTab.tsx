@@ -90,14 +90,14 @@ export function LandingFAQTab() {
     setFormData({ question: '', answer: '', order_index: 0 });
   }
 
-  if (loading) return <div className="p-6 text-center text-gray-500">Memuat FAQ...</div>;
+  if (loading) return <div className="p-6 text-center text-gray-500 dark:text-slate-400">Memuat FAQ...</div>;
 
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center border-b pb-4">
         <div>
-          <h2 className="text-lg font-bold text-gray-900">Manajemen FAQ</h2>
-          <p className="text-sm text-gray-500">Atur pertanyaan umum yang tampil di beranda publik.</p>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">Manajemen FAQ</h2>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Atur pertanyaan umum yang tampil di beranda publik.</p>
         </div>
         {!isAdding && !editingId && (
           <button 
@@ -113,21 +113,21 @@ export function LandingFAQTab() {
       </div>
 
       {(isAdding || editingId) && (
-        <form onSubmit={isAdding ? handleAdd : (e) => { e.preventDefault(); handleUpdate(editingId!); }} className="bg-gray-50 p-5 rounded-xl border border-gray-200 space-y-4">
+        <form onSubmit={isAdding ? handleAdd : (e) => { e.preventDefault(); handleUpdate(editingId!); }} className="bg-gray-50 dark:bg-[#111] p-5 rounded-xl border border-gray-200 dark:border-white/10 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Pertanyaan</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Pertanyaan</label>
             <input required type="text" value={formData.question} onChange={e => setFormData({...formData, question: e.target.value})} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Jawaban</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Jawaban</label>
             <textarea required rows={3} value={formData.answer} onChange={e => setFormData({...formData, answer: e.target.value})} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Urutan (Angka)</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Urutan (Angka)</label>
             <input type="number" required value={formData.order_index} onChange={e => setFormData({...formData, order_index: parseInt(e.target.value) || 0})} className="w-32 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
           </div>
           <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={cancelEdit} className="px-4 py-2 text-gray-600 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-medium transition-colors">Batal</button>
+            <button type="button" onClick={cancelEdit} className="px-4 py-2 text-gray-600 dark:text-slate-400 bg-gray-200 dark:bg-slate-800 hover:bg-gray-300 rounded-lg text-sm font-medium transition-colors">Batal</button>
             <button type="submit" className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
               <Check className="w-4 h-4" /> Simpan
             </button>
@@ -137,15 +137,15 @@ export function LandingFAQTab() {
 
       <div className="space-y-3">
         {faqs.map(faq => (
-          <div key={faq.id} className="p-4 border border-gray-200 rounded-xl hover:border-indigo-300 transition-colors bg-white">
+          <div key={faq.id} className="p-4 border border-gray-200 dark:border-white/10 rounded-xl hover:border-indigo-300 transition-colors bg-white dark:bg-[#0a0a0a]">
             <div className="flex justify-between items-start gap-4">
               <div>
-                <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-2">Urutan: {faq.order_index}</span>
-                <h4 className="font-bold text-gray-900">{faq.question}</h4>
-                <p className="text-gray-600 text-sm mt-1 leading-relaxed">{faq.answer}</p>
+                <span className="inline-block px-2 py-1 bg-gray-100 dark:bg-slate-900 text-gray-600 dark:text-slate-400 text-xs font-bold rounded mb-2">Urutan: {faq.order_index}</span>
+                <h4 className="font-bold text-gray-900 dark:text-white">{faq.question}</h4>
+                <p className="text-gray-600 dark:text-slate-400 text-sm mt-1 leading-relaxed">{faq.answer}</p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <button onClick={() => startEdit(faq)} className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Edit">
+                <button onClick={() => startEdit(faq)} className="p-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:bg-indigo-500/10 rounded-lg transition-colors" title="Edit">
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button onClick={() => handleDelete(faq.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
@@ -156,7 +156,7 @@ export function LandingFAQTab() {
           </div>
         ))}
         {faqs.length === 0 && !isAdding && (
-          <div className="text-center p-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-500">
+          <div className="text-center p-8 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-xl text-gray-500 dark:text-slate-400">
             Belum ada FAQ yang ditambahkan.
           </div>
         )}

@@ -223,7 +223,7 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50/50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950">
         <AdminSidebar />
         <main className="flex-1 ml-0 lg:ml-64 pt-20 flex items-center justify-center">
           <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
@@ -233,7 +233,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50/50 font-sans">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 font-sans">
       <AdminSidebar />
       <main className="flex-1 ml-0 lg:ml-64 px-4 pb-4 pt-20 lg:p-10 w-full min-w-0">
         <div className="max-w-4xl mx-auto">
@@ -242,31 +242,31 @@ export default function SettingsPage() {
               <Settings className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Pengaturan</h1>
-              <p className="text-gray-500 text-sm mt-0.5 font-medium">Kelola profil kreator dan keamanan akun Anda.</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Pengaturan</h1>
+              <p className="text-gray-500 dark:text-slate-400 text-sm mt-0.5 font-medium">Kelola profil kreator dan keamanan akun Anda.</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Profil Kreator */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
-                <User className="w-5 h-5 text-indigo-600" />
-                <h2 className="text-lg font-bold text-gray-900">Profil Kreator</h2>
+            <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
+              <div className="px-6 py-5 border-b border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 flex items-center gap-3">
+                <User className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Profil Kreator</h2>
               </div>
               <form onSubmit={handleSaveProfile} className="p-6 space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">Foto Profil (Avatar)</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">Foto Profil (Avatar)</label>
                   <div 
-                    className="flex-1 w-full flex flex-col sm:flex-row items-center gap-4 p-4 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-indigo-400 transition-all group"
+                    className="flex-1 w-full flex flex-col sm:flex-row items-center gap-4 p-4 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-xl bg-gray-50 dark:bg-[#111] hover:bg-gray-100 dark:bg-slate-900 hover:border-indigo-400 transition-all group"
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                   >
-                    <div className="w-24 h-24 rounded-full bg-gray-100 border border-gray-200 overflow-hidden shrink-0 relative group">
+                    <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-white/10 overflow-hidden shrink-0 relative group">
                       {previewUrl ? (
                         <img src={previewUrl} alt="Avatar" className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
+                        <div className="w-full h-full flex flex-col items-center justify-center text-gray-300 dark:text-slate-600">
                           <User className="w-8 h-8" />
                         </div>
                       )}
@@ -281,46 +281,46 @@ export default function SettingsPage() {
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                        className="px-4 py-2 bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 text-gray-700 dark:text-slate-300 font-medium rounded-lg hover:bg-gray-50 dark:bg-[#111] transition-colors text-sm"
                       >
                         Pilih atau Drag Gambar
                       </button>
-                      <p className="text-xs text-gray-500 mt-2">Rekomendasi rasio 1:1 (PNG/JPG)</p>
-                      <p className="text-xs text-gray-500 mt-1">Tekan <kbd className="bg-gray-100 px-1 py-0.5 rounded text-gray-700 font-mono">Ctrl+V</kbd> untuk paste</p>
+                      <p className="text-xs text-gray-500 dark:text-slate-400 mt-2">Rekomendasi rasio 1:1 (PNG/JPG)</p>
+                      <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">Tekan <kbd className="bg-gray-100 dark:bg-slate-900 px-1 py-0.5 rounded text-gray-700 dark:text-slate-300 font-mono">Ctrl+V</kbd> untuk paste</p>
                     </div>
                     <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Nama Pena</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Nama Pena</label>
                   <input
                     type="text"
                     value={namaPena}
                     onChange={(e) => setNamaPena(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a]"
                     placeholder="Contoh: Masashi Kishimoto"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Peran di Studio</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Peran di Studio</label>
                   <input
                     type="text"
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a]"
                     placeholder="Contoh: Lead Artist / Founder"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Bio Singkat</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Bio Singkat</label>
                   <textarea
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
                     rows={4}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a] resize-none"
                     placeholder="Ceritakan sedikit tentang dirimu..."
                   />
                 </div>
@@ -339,30 +339,30 @@ export default function SettingsPage() {
             </div>
 
             {/* Keamanan Akun */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-fit">
-              <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
+            <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden h-fit">
+              <div className="px-6 py-5 border-b border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 flex items-center gap-3">
                 <Lock className="w-5 h-5 text-amber-600" />
-                <h2 className="text-lg font-bold text-gray-900">Keamanan Akun</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Keamanan Akun</h2>
               </div>
               <form onSubmit={handleSavePassword} className="p-6 space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Password Baru</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Password Baru</label>
                   <input
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a]"
                     placeholder="Minimal 6 karakter"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Konfirmasi Password Baru</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Konfirmasi Password Baru</label>
                   <input
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a]"
                     placeholder="Ulangi password baru"
                   />
                 </div>
@@ -381,48 +381,48 @@ export default function SettingsPage() {
             </div>
 
             {/* Pengaturan Studio Publik */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-fit lg:col-span-2">
-              <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
+            <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden h-fit lg:col-span-2">
+              <div className="px-6 py-5 border-b border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 flex items-center gap-3">
                 <Settings className="w-5 h-5 text-green-600" />
-                <h2 className="text-lg font-bold text-gray-900">Pengaturan Studio Publik (Kontak & Sosial Media)</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Pengaturan Studio Publik (Kontak & Sosial Media)</h2>
               </div>
               <form onSubmit={handleSaveStudioSettings} className="p-6 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Kontak</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Email Kontak</label>
                     <input
                       type="email"
                       value={emailKontak}
                       onChange={(e) => setEmailKontak(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a]"
                       placeholder="contoh: halo@mangastudio.com"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Instagram URL</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Instagram URL</label>
                     <input
                       type="url"
                       value={instagramUrl}
                       onChange={(e) => setInstagramUrl(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a]"
                       placeholder="https://instagram.com/..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">X (Twitter) URL</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">X (Twitter) URL</label>
                     <input
                       type="url"
                       value={xUrl}
                       onChange={(e) => setXUrl(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a]"
                       placeholder="https://x.com/..."
                     />
                   </div>
                 </div>
 
-                <div className="pt-4 flex justify-end border-t border-gray-100">
+                <div className="pt-4 flex justify-end border-t border-gray-100 dark:border-white/5">
                   <button
                     type="submit"
                     disabled={savingStudioSettings}

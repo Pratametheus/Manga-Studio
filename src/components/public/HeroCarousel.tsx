@@ -58,8 +58,8 @@ export function HeroCarousel({ mangas }: HeroCarouselProps) {
           <div className="max-w-2xl space-y-6 animate-fade-in-up">
             
             <div className="flex items-center gap-3 mb-2">
-              <span className="px-3 py-1 bg-yellow-400 text-black text-xs font-black tracking-widest uppercase rounded">Karya Pilihan</span>
-              <span className="text-yellow-400 font-bold text-sm tracking-widest uppercase">{current.target_pasar}</span>
+              <span className="px-3 py-1 bg-pink-500 text-white text-xs font-black tracking-widest uppercase rounded">Karya Pilihan</span>
+              <span className="text-pink-500 font-bold text-sm tracking-widest uppercase">{current.target_pasar}</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-black text-white leading-tight tracking-tight drop-shadow-2xl">
@@ -75,7 +75,7 @@ export function HeroCarousel({ mangas }: HeroCarouselProps) {
                 href={current.link_publikasi || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-6 py-3.5 sm:px-8 sm:py-4 bg-yellow-400 text-black font-black text-sm sm:text-lg tracking-widest uppercase rounded-lg hover:bg-yellow-300 transition-all sm:hover:scale-105 shadow-[0_0_20px_rgba(250,204,21,0.3)]"
+                className="flex items-center justify-center gap-2 px-6 py-3.5 sm:px-8 sm:py-4 bg-pink-500 text-white font-black text-sm sm:text-lg tracking-widest uppercase rounded-lg hover:bg-pink-400 transition-all sm:hover:scale-105 shadow-[0_0_20px_rgba(236,72,153,0.3)]"
                 onClick={(e) => {
                   if (!current.link_publikasi) e.preventDefault();
                 }}
@@ -103,24 +103,23 @@ export function HeroCarousel({ mangas }: HeroCarouselProps) {
         <>
           <button 
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-black/30 hover:bg-yellow-400 text-white hover:text-black rounded-full flex items-center justify-center backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-black/30 hover:bg-pink-500 text-white hover:text-white rounded-full flex items-center justify-center backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
           >
             <ChevronLeft className="w-8 h-8" />
           </button>
           <button 
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-black/30 hover:bg-yellow-400 text-white hover:text-black rounded-full flex items-center justify-center backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-black/30 hover:bg-pink-500 text-white hover:text-white rounded-full flex items-center justify-center backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
           >
             <ChevronRight className="w-8 h-8" />
           </button>
 
-          {/* Indicators */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3">
             {mangas.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`transition-all duration-300 rounded-full ${currentIndex === idx ? 'w-10 h-2 bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]' : 'w-2 h-2 bg-white/40 hover:bg-white/80'}`}
+                className={`transition-all duration-300 rounded-full ${currentIndex === idx ? 'w-10 h-2 bg-pink-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]' : 'w-2 h-2 bg-white/40 hover:bg-white/80'}`}
               />
             ))}
           </div>

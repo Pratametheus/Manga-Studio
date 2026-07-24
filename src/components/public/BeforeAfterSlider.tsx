@@ -46,7 +46,7 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
   return (
     <div 
       ref={containerRef}
-      className="relative w-full overflow-hidden rounded-2xl cursor-ew-resize select-none border border-white/10 group bg-gray-900"
+      className="relative w-full overflow-hidden rounded-2xl cursor-ew-resize select-none border border-pink-200 group bg-white shadow-sm"
       onMouseDown={(e) => {
         setIsDragging(true);
         handleMove(e.clientX);
@@ -64,7 +64,7 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
       />
       
       {/* Overlay Label for Final (right side) - Placed BEFORE the sketch so sketch can cover it */}
-      <div className="absolute top-4 right-4 px-3 py-1 bg-yellow-400/90 backdrop-blur text-black text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-yellow-300">
+      <div className="absolute top-4 right-4 px-3 py-1 bg-pink-500/90 backdrop-blur text-white text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-pink-400">
         Final Render
       </div>
       
@@ -76,10 +76,10 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
         <img 
           src={beforeImage} 
           alt="Rough Sketch" 
-          className="absolute inset-0 w-full h-full object-contain pointer-events-none grayscale bg-gray-900"
+          className="absolute inset-0 w-full h-full object-contain pointer-events-none grayscale bg-slate-100"
         />
         {/* Overlay Label for Sketch */}
-        <div className="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur text-white text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-white/20">
+        <div className="absolute top-4 left-4 px-3 py-1 bg-gray-900/60 backdrop-blur text-white text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-gray-500/30">
           Sketsa Kasar
         </div>
       </div>

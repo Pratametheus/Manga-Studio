@@ -88,24 +88,24 @@ export default function DashboardPage() {
   const draftManga = projects.filter(p => p.status === 'draft').length;
 
   return (
-    <div className="flex min-h-screen bg-gray-50/50 font-sans">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 font-sans">
       <AdminSidebar />
       <main className="flex-1 ml-0 lg:ml-64 px-4 pb-4 pt-20 lg:p-10 w-full min-w-0">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-10">
             <div className="flex items-center gap-4">
-              <div className="relative flex items-center justify-center w-12 h-12 bg-gray-900 rounded-xl shadow-lg shadow-gray-900/20">
-                <PenTool className="w-6 h-6 text-white" />
+              <div className="relative flex items-center justify-center w-12 h-12 bg-gray-900 dark:bg-white rounded-xl shadow-lg shadow-gray-900/20 dark:shadow-white/20">
+                <PenTool className="w-6 h-6 text-white dark:text-gray-900" />
                 <Sparkles className="w-4 h-4 text-indigo-400 absolute -top-1 -right-1" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Overview</h1>
-                <p className="text-gray-500 text-sm mt-0.5 font-medium">Pantau statistik dan kelola direktori project manga Anda.</p>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Overview</h1>
+                <p className="text-gray-500 dark:text-slate-400 text-sm mt-0.5 font-medium">Pantau statistik dan kelola direktori project manga Anda.</p>
               </div>
             </div>
             <button 
               onClick={openAddModal}
-              className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white font-medium rounded-xl shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white font-medium rounded-xl shadow-sm shadow-indigo-500/20 hover:bg-indigo-700 transition-all active:scale-95"
             >
               <Plus className="w-4 h-4" />
               Tambah Manga
@@ -113,42 +113,42 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-              <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
+            <div className="bg-white dark:bg-[#0a0a0a] p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 flex items-center gap-4">
+              <div className="p-3 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl">
                 <FileText className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Project</p>
-                <h3 className="text-2xl font-bold text-gray-900">{totalManga}</h3>
+                <p className="text-sm font-medium text-gray-500 dark:text-slate-400">Total Project</p>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{totalManga}</h3>
               </div>
             </div>
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+            <div className="bg-white dark:bg-[#0a0a0a] p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 flex items-center gap-4">
               <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
                 <CheckCircle className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-500">Published</p>
-                <h3 className="text-2xl font-bold text-gray-900">{publishedManga}</h3>
+                <p className="text-sm font-medium text-gray-500 dark:text-slate-400">Published</p>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{publishedManga}</h3>
               </div>
             </div>
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+            <div className="bg-white dark:bg-[#0a0a0a] p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 flex items-center gap-4">
               <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
                 <Clock className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-500">Draft / Konsep</p>
-                <h3 className="text-2xl font-bold text-gray-900">{draftManga}</h3>
+                <p className="text-sm font-medium text-gray-500 dark:text-slate-400">Draft / Konsep</p>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{draftManga}</h3>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-5 border-b border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900">Daftar Project Manga</h2>
+          <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-100 dark:border-white/5">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Daftar Project Manga</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-gray-50/80 text-gray-500 text-xs font-semibold uppercase tracking-wider">
+                <thead className="bg-gray-50 dark:bg-[#111]/80 text-gray-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider">
                   <tr>
                     <th className="px-6 py-4 rounded-tl-xl whitespace-nowrap">Info Manga</th>
                     <th className="px-6 py-4 whitespace-nowrap">Status</th>
@@ -156,24 +156,24 @@ export default function DashboardPage() {
                     <th className="px-6 py-4 rounded-tr-xl text-right whitespace-nowrap">Aksi</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-white/5">
                   {projects.map((proj) => (
-                    <tr key={proj.id} className="hover:bg-gray-50/80 transition-colors group">
+                    <tr key={proj.id} className="hover:bg-gray-50 dark:bg-[#111]/80 transition-colors group">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link to={`/admin/project/${proj.id}`} className="block group-hover:opacity-90">
                           <div className="flex items-center gap-4">
-                            <div className="w-10 h-14 bg-gray-100 rounded-md overflow-hidden shrink-0 border border-gray-200">
+                            <div className="w-10 h-14 bg-gray-100 dark:bg-slate-900 rounded-md overflow-hidden shrink-0 border border-gray-200 dark:border-white/10">
                               {proj.cover_url ? (
                                 <img src={proj.cover_url} alt={proj.judul} className="w-full h-full object-cover" />
                               ) : (
-                                <div className="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
+                                <div className="w-full h-full flex items-center justify-center text-gray-600 dark:text-slate-400 bg-gray-50 dark:bg-[#111]">
                                   <ImageIcon className="w-5 h-5" />
                                 </div>
                               )}
                             </div>
                             <div>
-                              <div className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">{proj.judul} &rarr;</div>
-                              <div className="text-xs text-gray-500 truncate max-w-[200px] mt-1">{proj.tema || '-'}</div>
+                              <div className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 transition-colors">{proj.judul} &rarr;</div>
+                              <div className="text-xs text-gray-500 dark:text-slate-400 truncate max-w-[200px] mt-1">{proj.tema || '-'}</div>
                             </div>
                           </div>
                         </Link>
@@ -186,12 +186,12 @@ export default function DashboardPage() {
                           {proj.status === 'published' ? 'Published' : 'Draft'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 capitalize font-medium">{proj.target_pasar}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-slate-400 capitalize font-medium">{proj.target_pasar}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex justify-end gap-1 text-gray-400">
+                        <div className="flex justify-end gap-1 text-gray-400 dark:text-slate-500">
                           <button 
                             onClick={() => openEditModal(proj)}
-                            className="p-2 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                            className="p-2 hover:text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:bg-indigo-500/10 rounded-lg transition-colors"
                             title="Edit Info Manga"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -211,12 +211,12 @@ export default function DashboardPage() {
               </table>
             </div>
             {projects.length === 0 && (
-              <div className="p-16 text-center text-gray-500 flex flex-col items-center">
-                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 ring-1 ring-gray-100">
-                  <Plus className="w-6 h-6 text-gray-400" />
+              <div className="p-16 text-center text-gray-500 dark:text-slate-400 flex flex-col items-center">
+                <div className="w-16 h-16 bg-gray-50 dark:bg-[#111] rounded-full flex items-center justify-center mb-4 ring-1 ring-gray-100 dark:ring-white/10">
+                  <Plus className="w-6 h-6 text-gray-400 dark:text-slate-500" />
                 </div>
-                <p className="text-gray-900 font-medium">Belum ada data Manga</p>
-                <p className="text-sm mt-1 text-gray-500">Klik tombol "Tambah Manga" di atas untuk memulai.</p>
+                <p className="text-gray-900 dark:text-white font-medium">Belum ada data Manga</p>
+                <p className="text-sm mt-1 text-gray-500 dark:text-slate-400">Klik tombol "Tambah Manga" di atas untuk memulai.</p>
               </div>
             )}
           </div>
@@ -242,19 +242,19 @@ export default function DashboardPage() {
         className="max-w-md"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">
-            Apakah kamu yakin ingin menghapus manga <span className="font-semibold text-gray-900">"{mangaToDelete?.title}"</span>? Tindakan ini permanen dan tidak dapat dibatalkan.
+          <p className="text-gray-600 dark:text-slate-400">
+            Apakah kamu yakin ingin menghapus manga <span className="font-semibold text-gray-900 dark:text-white">"{mangaToDelete?.title}"</span>? Tindakan ini permanen dan tidak dapat dibatalkan.
           </p>
-          <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-gray-100">
+          <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-gray-100 dark:border-white/5">
             <button 
               onClick={() => setMangaToDelete(null)}
-              className="px-4 py-2 font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-xl transition-colors"
+              className="px-4 py-2 font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:bg-[#111] rounded-xl transition-colors"
             >
               Batal
             </button>
             <button 
               onClick={confirmDelete}
-              className="px-4 py-2 bg-red-600 text-white font-medium rounded-xl shadow-sm hover:bg-red-700 transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-red-600 text-gray-900 dark:text-white font-medium rounded-xl shadow-sm hover:bg-red-700 transition-colors flex items-center gap-2"
             >
               <Trash2 className="w-4 h-4" />
               Ya, Hapus

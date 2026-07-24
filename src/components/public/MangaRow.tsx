@@ -24,7 +24,7 @@ export function MangaRow({ title, mangas }: MangaRowProps) {
   return (
     <div className="py-6 group relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 flex items-end justify-between">
-        <h2 className="text-xl md:text-2xl font-bold text-white tracking-wide border-l-4 border-yellow-400 pl-3 leading-none">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-wide border-l-4 border-pink-500 pl-3 leading-none">
           {title}
         </h2>
       </div>
@@ -33,9 +33,9 @@ export function MangaRow({ title, mangas }: MangaRowProps) {
         {/* Left Arrow */}
         <button 
           onClick={() => scroll('left')}
-          className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-black to-transparent z-20 flex items-center justify-start px-2 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0"
+          className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent z-20 flex items-center justify-start px-2 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0"
         >
-          <div className="w-10 h-10 bg-black/50 hover:bg-yellow-400 text-white hover:text-black rounded-full flex items-center justify-center backdrop-blur-sm border border-white/10 transition-all hover:scale-110">
+          <div className="w-10 h-10 bg-white/90 hover:bg-pink-500 text-gray-900 hover:text-white rounded-full flex items-center justify-center backdrop-blur-sm border border-pink-100 shadow-md transition-all hover:scale-110">
             <ChevronLeft className="w-6 h-6" />
           </div>
         </button>
@@ -47,16 +47,18 @@ export function MangaRow({ title, mangas }: MangaRowProps) {
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {mangas.map((manga) => (
-            <MangaCard key={manga.id} manga={manga} />
+            <div key={manga.id} className="shrink-0 w-[140px] sm:w-[180px] md:w-[220px] lg:w-[240px]">
+              <MangaCard manga={manga} />
+            </div>
           ))}
         </div>
 
         {/* Right Arrow */}
         <button 
           onClick={() => scroll('right')}
-          className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-black to-transparent z-20 flex items-center justify-end px-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-20 flex items-center justify-end px-2 opacity-0 group-hover:opacity-100 transition-opacity"
         >
-          <div className="w-10 h-10 bg-black/50 hover:bg-yellow-400 text-white hover:text-black rounded-full flex items-center justify-center backdrop-blur-sm border border-white/10 transition-all hover:scale-110">
+          <div className="w-10 h-10 bg-white/90 hover:bg-pink-500 text-gray-900 hover:text-white rounded-full flex items-center justify-center backdrop-blur-sm border border-pink-100 shadow-md transition-all hover:scale-110">
             <ChevronRight className="w-6 h-6" />
           </div>
         </button>

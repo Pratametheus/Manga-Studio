@@ -1,11 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/",
-      "destination": "/api/seo"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/((?!api/|assets/|.*\\.).*)",
       "destination": "/api/seo"
     }
   ]

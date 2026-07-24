@@ -1,5 +1,42 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #ec4899;
+  --color-on-primary: #ffffff;
+  --color-secondary: #fce7f3;
+  --color-accent: #ec4899;
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  --color-muted: #f8fafc;
+  --color-border: #f1f5f9;
+  --color-destructive: #ef4444;
+  --color-ring: #ec4899;
+  
+  --font-sans: "Space Grotesk", sans-serif;
+  --font-heading: "Archivo", sans-serif;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+  --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading);
+}
+
 /* Global Scrollbar Settings */
 ::-webkit-scrollbar {
   width: 8px;

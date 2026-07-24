@@ -88,18 +88,18 @@ export function LandingSEOTab() {
     }
   };
 
-  if (loading) return <div className="p-6 text-center text-gray-500">Memuat Pengaturan...</div>;
+  if (loading) return <div className="p-6 text-center text-gray-500 dark:text-slate-400">Memuat Pengaturan...</div>;
 
   return (
     <div className="p-6 space-y-6">
       <div className="border-b pb-4">
-        <h2 className="text-lg font-bold text-gray-900">Meta Tags & SEO</h2>
-        <p className="text-sm text-gray-500">Sesuaikan tampilan saat link website ini dibagikan di WhatsApp, Discord, X (Twitter), atau Google.</p>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white">Meta Tags & SEO</h2>
+        <p className="text-sm text-gray-500 dark:text-slate-400">Sesuaikan tampilan saat link website ini dibagikan di WhatsApp, Discord, X (Twitter), atau Google.</p>
       </div>
 
       <form onSubmit={handleSave} className="space-y-6 max-w-3xl">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Judul Website (SEO Title)</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Judul Website (SEO Title)</label>
           <input 
             type="text" 
             value={seoTitle} 
@@ -110,7 +110,7 @@ export function LandingSEOTab() {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Deskripsi (Meta Description)</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Deskripsi (Meta Description)</label>
           <textarea 
             rows={3} 
             value={seoDesc} 
@@ -121,16 +121,16 @@ export function LandingSEOTab() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Thumbnail Preview (OG Image)</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">Thumbnail Preview (OG Image)</label>
           <div className="flex flex-col sm:flex-row gap-6 items-start">
             <div 
               onClick={() => fileInputRef.current?.click()}
-              className="w-64 h-36 rounded-xl bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer overflow-hidden relative group hover:border-indigo-400 transition-colors shrink-0"
+              className="w-64 h-36 rounded-xl bg-gray-100 dark:bg-slate-900 border-2 border-dashed border-gray-300 dark:border-white/20 flex items-center justify-center cursor-pointer overflow-hidden relative group hover:border-indigo-400 transition-colors shrink-0"
             >
               {seoImageUrl ? (
                 <img src={seoImageUrl} alt="SEO Preview" className="w-full h-full object-cover" />
               ) : (
-                <div className="flex flex-col items-center justify-center text-gray-400">
+                <div className="flex flex-col items-center justify-center text-gray-400 dark:text-slate-500">
                   <ImageIcon className="w-8 h-8 mb-2" />
                   <span className="text-xs">Klik untuk upload</span>
                 </div>
@@ -141,9 +141,9 @@ export function LandingSEOTab() {
             </div>
             
             <div className="flex-1">
-              <h4 className="text-sm font-bold text-gray-800 mb-2">Simulasi Tampilan WhatsApp/Discord</h4>
-              <div className="border border-gray-200 rounded-lg overflow-hidden max-w-sm bg-[#f0f2f5]">
-                <div className="h-32 bg-gray-200">
+              <h4 className="text-sm font-bold text-gray-800 dark:text-slate-200 mb-2">Simulasi Tampilan WhatsApp/Discord</h4>
+              <div className="border border-gray-200 dark:border-white/10 rounded-lg overflow-hidden max-w-sm bg-[#f0f2f5]">
+                <div className="h-32 bg-gray-200 dark:bg-slate-800">
                   {seoImageUrl && <img src={seoImageUrl} alt="Preview" className="w-full h-full object-cover" />}
                 </div>
                 <div className="p-3 bg-[#f0f2f5]">

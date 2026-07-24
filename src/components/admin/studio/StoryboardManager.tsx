@@ -155,7 +155,7 @@ export function StoryboardManager({ mangaId }: StoryboardManagerProps) {
       case 'disetujui': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
       case 'review_editor': return 'bg-blue-50 text-blue-700 border-blue-200';
       case 'revisi': return 'bg-red-50 text-red-700 border-red-200';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+      default: return 'bg-gray-100 dark:bg-slate-900 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-white/10';
     }
   };
 
@@ -171,7 +171,7 @@ export function StoryboardManager({ mangaId }: StoryboardManagerProps) {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Storyboard per Bab</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Storyboard per Bab</h2>
         <button 
           onClick={openAddModal}
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 transition-colors"
@@ -183,29 +183,29 @@ export function StoryboardManager({ mangaId }: StoryboardManagerProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {storyboards.map((sb) => (
-          <div key={sb.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col md:flex-row group">
-            <div className="w-full md:w-1/3 aspect-[3/4] bg-gray-100 relative shrink-0">
+          <div key={sb.id} className="bg-white dark:bg-[#0a0a0a] rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden flex flex-col md:flex-row group">
+            <div className="w-full md:w-1/3 aspect-[3/4] bg-gray-100 dark:bg-slate-900 relative shrink-0">
               {sb.draf_kasar_path ? (
                 <img src={sb.draf_kasar_path} alt={`Bab ${sb.bab}`} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
+                <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 dark:text-slate-500">
                   <LayoutTemplate className="w-8 h-8 mb-2 opacity-50" />
                 </div>
               )}
             </div>
             <div className="p-5 flex-1 flex flex-col">
               <div className="flex justify-between items-start mb-3">
-                <h3 className="font-bold text-gray-900 text-xl">Bab {sb.bab}</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white text-xl">Bab {sb.bab}</h3>
                 <span className={cn("px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border", getStatusColor(sb.status_approval))}>
                   {getStatusLabel(sb.status_approval)}
                 </span>
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Catatan Pacing & Layout</p>
-                <p className="text-sm text-gray-700 whitespace-pre-wrap line-clamp-4">{sb.catatan_pacing_layout || 'Tidak ada catatan.'}</p>
+                <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">Catatan Pacing & Layout</p>
+                <p className="text-sm text-gray-700 dark:text-slate-300 whitespace-pre-wrap line-clamp-4">{sb.catatan_pacing_layout || 'Tidak ada catatan.'}</p>
               </div>
               <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-50 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => handleDelete(sb.id, sb.bab)} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                <button onClick={() => handleDelete(sb.id, sb.bab)} className="p-2 text-gray-400 dark:text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -214,10 +214,10 @@ export function StoryboardManager({ mangaId }: StoryboardManagerProps) {
         ))}
 
         {storyboards.length === 0 && (
-          <div className="col-span-full p-12 text-center bg-white rounded-2xl border border-dashed border-gray-300 flex flex-col items-center">
-            <LayoutTemplate className="w-10 h-10 text-gray-300 mb-3" />
-            <p className="text-gray-500 font-medium">Belum ada storyboard yang diunggah</p>
-            <button onClick={openAddModal} className="text-indigo-600 text-sm font-medium mt-2 hover:underline">Tambah Bab Pertama</button>
+          <div className="col-span-full p-12 text-center bg-white dark:bg-[#0a0a0a] rounded-2xl border border-dashed border-gray-300 dark:border-white/20 flex flex-col items-center">
+            <LayoutTemplate className="w-10 h-10 text-gray-300 dark:text-slate-600 mb-3" />
+            <p className="text-gray-500 dark:text-slate-400 font-medium">Belum ada storyboard yang diunggah</p>
+            <button onClick={openAddModal} className="text-indigo-600 dark:text-indigo-400 text-sm font-medium mt-2 hover:underline">Tambah Bab Pertama</button>
           </div>
         )}
       </div>
@@ -226,19 +226,19 @@ export function StoryboardManager({ mangaId }: StoryboardManagerProps) {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nomor Bab *</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Nomor Bab *</label>
               <input
                 type="number"
                 {...register('bab', { required: true, min: 1 })}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
                 placeholder="Contoh: 1"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Status Approval</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Status Approval</label>
               <select
                 {...register('status_approval')}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
               >
                 <option value="draf">Draf Kasar</option>
                 <option value="review_editor">Review Editor</option>
@@ -249,12 +249,12 @@ export function StoryboardManager({ mangaId }: StoryboardManagerProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Unggah Gambar Draf</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Unggah Gambar Draf</label>
             <div 
               onClick={() => fileInputRef.current?.click()}
               onDragOver={handleDragOver}
               onDrop={handleDrop}
-              className={`w-full aspect-[4/3] max-h-64 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all overflow-hidden relative group ${previewUrl ? 'border-transparent bg-gray-900' : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-indigo-400'}`}
+              className={`w-full aspect-[4/3] max-h-64 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all overflow-hidden relative group ${previewUrl ? 'border-transparent bg-gray-900' : 'border-gray-300 dark:border-white/20 bg-gray-50 dark:bg-[#111] hover:bg-gray-100 dark:bg-slate-900 hover:border-indigo-400'}`}
             >
               {previewUrl ? (
                 <>
@@ -265,9 +265,9 @@ export function StoryboardManager({ mangaId }: StoryboardManagerProps) {
                 </>
               ) : (
                 <div className="text-center p-6">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600 font-medium">Klik atau Drag & Drop draf</p>
-                  <p className="text-xs text-gray-500 mt-1">atau tekan <kbd className="bg-gray-200 px-1 py-0.5 rounded text-gray-700 font-mono">Ctrl+V</kbd> untuk paste</p>
+                  <Upload className="w-8 h-8 text-gray-400 dark:text-slate-500 mx-auto mb-2" />
+                  <p className="text-sm text-gray-600 dark:text-slate-400 font-medium">Klik atau Drag & Drop draf</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">atau tekan <kbd className="bg-gray-200 dark:bg-slate-800 px-1 py-0.5 rounded text-gray-700 dark:text-slate-300 font-mono">Ctrl+V</kbd> untuk paste</p>
                 </div>
               )}
             </div>
@@ -275,16 +275,16 @@ export function StoryboardManager({ mangaId }: StoryboardManagerProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Catatan Pacing & Layout</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Catatan Pacing & Layout</label>
             <textarea
               {...register('catatan_pacing_layout')}
               rows={4}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"
               placeholder="Tambahkan catatan khusus untuk editor atau penggambar di sini..."
             />
           </div>
 
-          <div className="flex justify-end pt-4 mt-6 border-t border-gray-100">
+          <div className="flex justify-end pt-4 mt-6 border-t border-gray-100 dark:border-white/5">
             <button
               type="submit"
               disabled={isSubmitting}

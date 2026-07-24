@@ -10,65 +10,67 @@ import ProjectStudioPage from './pages/admin/ProjectStudioPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import LandingSettingsPage from './pages/admin/LandingSettingsPage';
 import AdminGalleryPage from './pages/admin/AdminGalleryPage';
-import PublicGalleryPage from './pages/public/PublicGalleryPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthInterceptor } from './components/auth/AuthInterceptor';
+
+import { ThemeProvider } from './components/admin/ThemeProvider';
 
 export default function App() {
   return (
     <HelmetProvider>
-      <Router>
-        <AuthInterceptor />
-        <Toaster 
-          position="bottom-right" 
-          toastOptions={{
-            style: {
-              borderRadius: '12px',
-              background: '#111827',
-              color: '#fff',
-              fontSize: '14px',
-              boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)'
-            },
-          }} 
-        />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/manga/:id" element={<MangaDetailPage />} />
-        <Route path="/gallery" element={<PublicGalleryPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/set-password" element={<SetPasswordPage />} />
-        {/* Protected Admin Routes */}
-        <Route path="/admin" element={
-          <ProtectedRoute>
-            <DashboardPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/settings" element={
-          <ProtectedRoute>
-            <SettingsPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/landing" element={
-          <ProtectedRoute>
-            <LandingSettingsPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/gallery" element={
-          <ProtectedRoute>
-            <AdminGalleryPage />
-          </ProtectedRoute>
-        } />
-        <Route 
-          path="/admin/project/:id" 
-          element={
-            <ProtectedRoute>
-              <ProjectStudioPage />
-            </ProtectedRoute>
-          } 
-        />
-      </Routes>
-    </Router>
+      <ThemeProvider defaultTheme="light" storageKey="mangastudio-theme">
+        <Router>
+          <AuthInterceptor />
+          <Toaster 
+            position="bottom-right" 
+            toastOptions={{
+              style: {
+                borderRadius: '12px',
+                background: '#111827',
+                color: '#fff',
+                fontSize: '14px',
+                boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)'
+              },
+            }} 
+          />
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/manga/:id" element={<MangaDetailPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/set-password" element={<SetPasswordPage />} />
+            {/* Protected Admin Routes */}
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/settings" element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/landing" element={
+              <ProtectedRoute>
+                <LandingSettingsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/gallery" element={
+              <ProtectedRoute>
+                <AdminGalleryPage />
+              </ProtectedRoute>
+            } />
+            <Route 
+              path="/admin/project/:id" 
+              element={
+                <ProtectedRoute>
+                  <ProjectStudioPage />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </Router>
+      </ThemeProvider>
     </HelmetProvider>
   );
 }

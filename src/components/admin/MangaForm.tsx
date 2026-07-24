@@ -147,12 +147,12 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
       <div className="space-y-5">
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Cover Utama (Sampul Manga)</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Cover Utama (Sampul Manga)</label>
           <div
             onClick={() => fileInputRef.current?.click()}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
-            className={`w-full aspect-video sm:aspect-[2/1] border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all overflow-hidden relative group ${previewUrl ? 'border-transparent bg-gray-900' : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-indigo-400'}`}
+            className={`w-full aspect-video sm:aspect-[2/1] border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all overflow-hidden relative group ${previewUrl ? 'border-transparent bg-gray-900' : 'border-gray-300 dark:border-white/20 bg-gray-50 dark:bg-[#111] hover:bg-gray-100 dark:bg-slate-900 hover:border-indigo-400'}`}
           >
             {previewUrl ? (
               <>
@@ -162,10 +162,10 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
                 </div>
               </>
             ) : <div className="text-center p-6">
-              <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 font-medium">Klik atau Drag & Drop cover manga</p>
-              <p className="text-xs text-gray-500 mt-1">atau tekan <kbd className="bg-gray-200 px-1 py-0.5 rounded text-gray-700 font-mono">Ctrl+V</kbd> untuk paste</p>
-              <p className="text-sm text-gray-400 mt-2">Rekomendasi rasio Portrait (PNG/JPG)</p>
+              <Upload className="w-10 h-10 text-gray-400 dark:text-slate-500 mx-auto mb-3" />
+              <p className="text-gray-600 dark:text-slate-400 font-medium">Klik atau Drag & Drop cover manga</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">atau tekan <kbd className="bg-gray-200 dark:bg-slate-800 px-1 py-0.5 rounded text-gray-700 dark:text-slate-300 font-mono">Ctrl+V</kbd> untuk paste</p>
+              <p className="text-sm text-gray-400 dark:text-slate-500 mt-2">Rekomendasi rasio Portrait (PNG/JPG)</p>
             </div>
             }
           </div>
@@ -173,10 +173,10 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Judul Manga *</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Judul Manga *</label>
           <input
             {...register('judul')}
-            className={`w-full px-4 py-2.5 rounded-xl border focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white ${errors.judul ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'}`}
+            className={`w-full px-4 py-2.5 rounded-xl border focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a] ${errors.judul ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200 dark:border-white/10'}`}
             placeholder="Masukkan judul manga"
           />
           {errors.judul && <p className="mt-1.5 text-sm text-red-500">{errors.judul.message}</p>}
@@ -184,10 +184,10 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Target Pasar</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Target Pasar</label>
             <select
               {...register('target_pasar')}
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white appearance-none"
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a] appearance-none"
             >
               <option value="shonen">Shonen (Remaja Laki-laki)</option>
               <option value="shojo">Shojo (Remaja Perempuan)</option>
@@ -196,10 +196,10 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Status</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Status</label>
             <select
               {...register('status')}
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white appearance-none"
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a] appearance-none"
             >
               <option value="draft">Draft (Disembunyikan)</option>
               <option value="published">Published (Publik)</option>
@@ -208,20 +208,20 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Tema / Genre</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Tema / Genre</label>
           <input
             {...register('tema')}
-            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a]"
             placeholder="Contoh: Action, Fantasy, Romance"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Link Publikasi Webtoon/Kakaopage (Opsional)</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Link Publikasi Webtoon/Kakaopage (Opsional)</label>
           <input
             {...register('link_publikasi')}
             type="url"
-            className={`w-full px-4 py-2.5 rounded-xl border focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white ${errors.link_publikasi ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200'}`}
+            className={`w-full px-4 py-2.5 rounded-xl border focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a] ${errors.link_publikasi ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-gray-200 dark:border-white/10'}`}
             placeholder="https://webtoons.com/..."
           />
           {errors.link_publikasi && <p className="mt-1.5 text-sm text-red-500">{errors.link_publikasi.message}</p>}
@@ -235,35 +235,35 @@ export function MangaForm({ initialData, onSubmit, isLoading }: MangaFormProps) 
             className="w-5 h-5 text-yellow-500 border-yellow-300 rounded focus:ring-yellow-500"
           />
           <div>
-            <label htmlFor="is_featured" className="block text-sm font-bold text-gray-900 cursor-pointer">
+            <label htmlFor="is_featured" className="block text-sm font-bold text-gray-900 dark:text-white cursor-pointer">
               Jadikan Karya Pilihan (Featured)
             </label>
-            <p className="text-xs text-gray-600 mt-0.5">Tampilkan karya ini di Banner Utama halaman publik (maksimal 5 karya direkomendasikan).</p>
+            <p className="text-xs text-gray-600 dark:text-slate-400 mt-0.5">Tampilkan karya ini di Banner Utama halaman publik (maksimal 5 karya direkomendasikan).</p>
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Logline (Sinopsis Singkat)</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Logline (Sinopsis Singkat)</label>
           <textarea
             {...register('logline')}
             rows={2}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white resize-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a] resize-none"
             placeholder="1-2 kalimat ringkasan yang memikat..."
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Sinopsis Lengkap</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Sinopsis Lengkap</label>
           <textarea
             {...register('sinopsis_lengkap')}
             rows={5}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white resize-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a] resize-none"
             placeholder="Ceritakan detail alur cerita di sini..."
           />
         </div>
       </div>
 
-      <div className="flex justify-end pt-6 mt-6 border-t border-gray-100">
+      <div className="flex justify-end pt-6 mt-6 border-t border-gray-100 dark:border-white/5">
         <button
           type="submit"
           disabled={isFormLoading}

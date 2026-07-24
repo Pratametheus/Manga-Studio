@@ -72,7 +72,7 @@ export function KanbanManager({ mangaId }: KanbanManagerProps) {
   };
 
   if (loading) {
-    return <div className="p-8 text-center text-gray-500 animate-pulse">Memuat Kanban Board...</div>;
+    return <div className="p-8 text-center text-gray-500 dark:text-slate-400 animate-pulse">Memuat Kanban Board...</div>;
   }
 
   return (
@@ -81,12 +81,12 @@ export function KanbanManager({ mangaId }: KanbanManagerProps) {
         const stageTasks = tasks.filter(t => (t.tahap_produksi || 'naskah') === stage.id);
         
         return (
-          <div key={stage.id} className="flex-none w-80 bg-gray-50/50 rounded-2xl border border-gray-200 flex flex-col overflow-hidden shadow-sm">
+          <div key={stage.id} className="flex-none w-80 bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 rounded-2xl border border-gray-200 dark:border-white/10 flex flex-col overflow-hidden shadow-sm">
             {/* Column Header */}
             <div className={cn("p-4 border-b", stage.color.replace('text-', 'border-b-'))}>
               <div className="flex items-center justify-between">
                 <h3 className={cn("font-bold", stage.color.split(' ')[1])}>{stage.label}</h3>
-                <span className="bg-white/50 text-xs font-bold px-2 py-1 rounded-full shadow-sm border border-black/5">
+                <span className="bg-white dark:bg-[#0a0a0a]/50 text-xs font-bold px-2 py-1 rounded-full shadow-sm border border-black/5">
                   {stageTasks.length}
                 </span>
               </div>
@@ -95,7 +95,7 @@ export function KanbanManager({ mangaId }: KanbanManagerProps) {
             {/* Cards Container */}
             <div className="flex-1 overflow-y-auto p-3 space-y-3">
               {stageTasks.length === 0 ? (
-                <div className="text-center p-6 text-gray-400 text-sm border-2 border-dashed border-gray-200 rounded-xl">
+                <div className="text-center p-6 text-gray-400 dark:text-slate-500 text-sm border-2 border-dashed border-gray-200 dark:border-white/10 rounded-xl">
                   Kosong
                 </div>
               ) : (
@@ -103,37 +103,37 @@ export function KanbanManager({ mangaId }: KanbanManagerProps) {
                   <div 
                     key={task.id} 
                     onClick={() => setSelectedTask(task)}
-                    className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition-all group cursor-pointer"
+                    className="bg-white dark:bg-[#0a0a0a] p-4 rounded-xl shadow-sm border border-gray-200 dark:border-white/10 hover:shadow-md hover:border-indigo-300 transition-all group cursor-pointer"
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <div className="font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded text-xs">
+                      <div className="font-bold text-indigo-700 bg-indigo-50 dark:bg-indigo-500/10 px-2 py-0.5 rounded text-xs">
                         Bab {task.bab}
                       </div>
                       {stage.id === 'selesai' && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
                     </div>
                     
-                    <h4 className="font-medium text-gray-800 text-sm mb-4 line-clamp-2">
+                    <h4 className="font-medium text-gray-800 dark:text-slate-200 text-sm mb-4 line-clamp-2">
                       {task.judul_bab || 'Tanpa Judul'}
                     </h4>
                     
-                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
+                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100 dark:border-white/5">
                       {/* Prev Button */}
                       <button 
                         onClick={(e) => { e.stopPropagation(); handleMoveStage(task.id, KANBAN_STAGES[stageIndex - 1].id); }}
                         disabled={stageIndex === 0}
-                        className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors disabled:opacity-0"
+                        className="p-1.5 text-gray-400 dark:text-slate-500 hover:text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:bg-indigo-500/10 rounded-md transition-colors disabled:opacity-0"
                         title="Pindah ke tahap sebelumnya"
                       >
                         <MoveLeft className="w-4 h-4" />
                       </button>
                       
-                      <FileText className="w-4 h-4 text-gray-300" />
+                      <FileText className="w-4 h-4 text-gray-300 dark:text-slate-600" />
                       
                       {/* Next Button */}
                       <button 
                         onClick={(e) => { e.stopPropagation(); handleMoveStage(task.id, KANBAN_STAGES[stageIndex + 1].id); }}
                         disabled={stageIndex === KANBAN_STAGES.length - 1}
-                        className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors disabled:opacity-0"
+                        className="p-1.5 text-gray-400 dark:text-slate-500 hover:text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:bg-indigo-500/10 rounded-md transition-colors disabled:opacity-0"
                         title="Pindah ke tahap selanjutnya"
                       >
                         <MoveRight className="w-4 h-4" />
@@ -217,13 +217,13 @@ function TaskDetailContent({ task, mangaId, onUpdate }: { task: NaskahBab, manga
   };
 
   return (
-    <div className="bg-white -m-6">
+    <div className="bg-white dark:bg-[#0a0a0a] -m-6">
       {/* Tabs */}
-      <div className="flex gap-4 border-b px-6 pt-4 bg-gray-50 overflow-x-auto sticky top-0 z-20">
-        <button onClick={() => setActiveTab('info')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'info' ? "border-indigo-600 text-indigo-600" : "border-transparent text-gray-500")}>Info & Naskah</button>
-        <button onClick={() => setActiveTab('storyboard')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'storyboard' ? "border-indigo-600 text-indigo-600" : "border-transparent text-gray-500")}>Storyboard ({storyboards.length})</button>
-        <button onClick={() => setActiveTab('inking')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'inking' ? "border-indigo-600 text-indigo-600" : "border-transparent text-gray-500")}>Inking / Lineart</button>
-        <button onClick={() => setActiveTab('coloring')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'coloring' ? "border-indigo-600 text-indigo-600" : "border-transparent text-gray-500")}>Coloring / Toning</button>
+      <div className="flex gap-4 border-b px-6 pt-4 bg-gray-50 dark:bg-[#111] overflow-x-auto sticky top-0 z-20">
+        <button onClick={() => setActiveTab('info')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'info' ? "border-indigo-600 text-indigo-600 dark:text-indigo-400" : "border-transparent text-gray-500 dark:text-slate-400")}>Info & Naskah</button>
+        <button onClick={() => setActiveTab('storyboard')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'storyboard' ? "border-indigo-600 text-indigo-600 dark:text-indigo-400" : "border-transparent text-gray-500 dark:text-slate-400")}>Storyboard ({storyboards.length})</button>
+        <button onClick={() => setActiveTab('inking')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'inking' ? "border-indigo-600 text-indigo-600 dark:text-indigo-400" : "border-transparent text-gray-500 dark:text-slate-400")}>Inking / Lineart</button>
+        <button onClick={() => setActiveTab('coloring')} className={cn("pb-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap", activeTab === 'coloring' ? "border-indigo-600 text-indigo-600 dark:text-indigo-400" : "border-transparent text-gray-500 dark:text-slate-400")}>Coloring / Toning</button>
       </div>
 
       {/* Content Area */}
@@ -231,23 +231,23 @@ function TaskDetailContent({ task, mangaId, onUpdate }: { task: NaskahBab, manga
         {activeTab === 'info' && (
           <div className="space-y-6">
             <div>
-              <h3 className="text-xl font-bold text-gray-900">{task.judul_bab || 'Bab Tanpa Judul'}</h3>
-              <p className="text-gray-500 text-sm mt-1">Status saat ini: <span className="uppercase font-bold text-indigo-600">{task.tahap_produksi || 'Naskah'}</span></p>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{task.judul_bab || 'Bab Tanpa Judul'}</h3>
+              <p className="text-gray-500 dark:text-slate-400 text-sm mt-1">Status saat ini: <span className="uppercase font-bold text-indigo-600 dark:text-indigo-400">{task.tahap_produksi || 'Naskah'}</span></p>
             </div>
             <div>
-              <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Teks Naskah Cerita</h4>
-              <div className="prose prose-sm max-w-none bg-gray-50 p-6 rounded-2xl border border-gray-100" dangerouslySetInnerHTML={{ __html: task.konten || '<p className="text-gray-400">Belum ada konten tulisan.</p>' }} />
+              <h4 className="text-sm font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-3">Teks Naskah Cerita</h4>
+              <div className="prose prose-sm max-w-none bg-gray-50 dark:bg-[#111] p-6 rounded-2xl border border-gray-100 dark:border-white/5" dangerouslySetInnerHTML={{ __html: task.konten || '<p className="text-gray-400 dark:text-slate-500">Belum ada konten tulisan.</p>' }} />
             </div>
           </div>
         )}
 
         {activeTab === 'storyboard' && (
           <div>
-             <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Storyboard Pages</h4>
+             <h4 className="text-sm font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-4">Storyboard Pages</h4>
              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-               {storyboards.length === 0 && <p className="text-gray-400 col-span-full">Belum ada storyboard yang diunggah ke bab ini. (Unggah melalui tab Storyboard utama)</p>}
+               {storyboards.length === 0 && <p className="text-gray-400 dark:text-slate-500 col-span-full">Belum ada storyboard yang diunggah ke bab ini. (Unggah melalui tab Storyboard utama)</p>}
                {storyboards.map(sb => (
-                 <div key={sb.id} className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden border border-gray-200">
+                 <div key={sb.id} className="relative aspect-[3/4] bg-gray-100 dark:bg-slate-900 rounded-xl overflow-hidden border border-gray-200 dark:border-white/10">
                    <img src={sb.draf_kasar_path} alt="Storyboard page" className="w-full h-full object-cover" />
                  </div>
                ))}
@@ -257,32 +257,32 @@ function TaskDetailContent({ task, mangaId, onUpdate }: { task: NaskahBab, manga
 
         {(activeTab === 'inking' || activeTab === 'coloring') && (
           <div className="max-w-2xl mx-auto h-full flex flex-col justify-center pb-12">
-            <h4 className="text-center font-bold text-gray-800 mb-2 text-xl">
+            <h4 className="text-center font-bold text-gray-800 dark:text-slate-200 mb-2 text-xl">
               Upload Hasil {activeTab === 'inking' ? 'Inking (Lineart)' : 'Coloring (Hasil Akhir)'}
             </h4>
-            <p className="text-center text-gray-500 text-sm mb-8">
+            <p className="text-center text-gray-500 dark:text-slate-400 text-sm mb-8">
               Unggah gambar resolusi tinggi untuk memverifikasi pekerjaan tahap ini.
             </p>
             
             <div className="w-full relative">
               {(activeTab === 'inking' ? task.inking_path : task.coloring_path) ? (
-                 <div className="rounded-2xl border-2 border-gray-200 overflow-hidden relative group">
-                   <img src={activeTab === 'inking' ? task.inking_path : task.coloring_path} alt={activeTab} className="w-full object-contain max-h-[50vh] bg-gray-100" />
+                 <div className="rounded-2xl border-2 border-gray-200 dark:border-white/10 overflow-hidden relative group">
+                   <img src={activeTab === 'inking' ? task.inking_path : task.coloring_path} alt={activeTab} className="w-full object-contain max-h-[50vh] bg-gray-100 dark:bg-slate-900" />
                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                     <label className="cursor-pointer bg-white text-gray-900 px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:scale-105 transition-transform">
+                     <label className="cursor-pointer bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:scale-105 transition-transform">
                        <Upload className="w-5 h-5" /> Ganti Gambar
                        <input type="file" accept="image/*" className="hidden" disabled={isUploading} onChange={(e) => handleUploadAsset(e, activeTab)} />
                      </label>
                    </div>
                  </div>
               ) : (
-                <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-3xl cursor-pointer bg-gray-50 hover:bg-indigo-50 hover:border-indigo-300 transition-all group">
+                <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 dark:border-white/20 border-dashed rounded-3xl cursor-pointer bg-gray-50 dark:bg-[#111] hover:bg-indigo-50 dark:bg-indigo-500/10 hover:border-indigo-300 transition-all group">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <div className="w-16 h-16 bg-white shadow-sm rounded-full flex items-center justify-center mb-4 group-hover:-translate-y-1 transition-transform">
-                      <ImageIcon className="w-8 h-8 text-gray-400 group-hover:text-indigo-500" />
+                    <div className="w-16 h-16 bg-white dark:bg-[#0a0a0a] shadow-sm rounded-full flex items-center justify-center mb-4 group-hover:-translate-y-1 transition-transform">
+                      <ImageIcon className="w-8 h-8 text-gray-400 dark:text-slate-500 group-hover:text-indigo-500" />
                     </div>
-                    <p className="mb-2 text-sm text-gray-500 font-medium">Klik untuk memilih gambar</p>
-                    <p className="text-xs text-gray-400">PNG, JPG, WebP (Maks. 5MB)</p>
+                    <p className="mb-2 text-sm text-gray-500 dark:text-slate-400 font-medium">Klik untuk memilih gambar</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-500">PNG, JPG, WebP (Maks. 5MB)</p>
                   </div>
                   <input type="file" className="hidden" accept="image/*" disabled={isUploading} onChange={(e) => handleUploadAsset(e, activeTab)} />
                 </label>

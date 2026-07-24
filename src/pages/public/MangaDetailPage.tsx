@@ -63,25 +63,25 @@ export default function MangaDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(250,204,21,0.5)]" />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(236,72,153,0.5)]" />
       </div>
     );
   }
 
   if (!manga) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-white text-gray-900 flex flex-col items-center justify-center">
         <h1 className="text-4xl font-black mb-4">404 - KARYA TIDAK DITEMUKAN</h1>
-        <Link to="/" className="text-yellow-400 hover:underline">Kembali ke Beranda</Link>
+        <Link to="/" className="text-pink-500 hover:underline">Kembali ke Beranda</Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-yellow-400 selection:text-black">
+    <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden selection:bg-pink-500 selection:text-white">
       <SEO 
-        title={`${manga.judul} - MangaStudio`}
+        title={`${manga.judul} - MochiToon`}
         description={manga.logline || `Kenali dunia dan karakter dari komik ${manga.judul}.`}
         image={manga.cover_url || undefined}
         url={`https://manga-studio.vercel.app/manga/${manga.id}`}
@@ -90,15 +90,15 @@ export default function MangaDetailPage() {
       
       <main>
         {/* Hero Section */}
-        <div className="relative w-full min-h-[60vh] flex flex-col justify-end pt-32 pb-16 px-6 lg:px-12 bg-gray-900 border-b border-white/10">
+        <div className="relative w-full min-h-[60vh] flex flex-col justify-end pt-32 pb-16 px-6 lg:px-12 bg-slate-50 border-b border-pink-100">
           <div 
-            className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
+            className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-multiply"
             style={{ backgroundImage: `url(${manga.cover_url || 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=2070'})` }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent" />
           
           <div className="relative z-10 max-w-6xl mx-auto w-full">
-            <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-yellow-400 transition-colors font-bold uppercase tracking-widest text-sm mb-8 group">
+            <Link to="/" className="inline-flex items-center gap-2 text-gray-500 hover:text-pink-500 transition-colors font-bold uppercase tracking-widest text-sm mb-8 group">
               <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               Kembali
             </Link>
@@ -106,35 +106,35 @@ export default function MangaDetailPage() {
             <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-start text-center md:text-left">
               <div 
                 onClick={() => setIsCoverModalOpen(true)}
-                className="w-48 md:w-64 shrink-0 rounded-2xl overflow-hidden shadow-2xl shadow-black border-2 border-white/10 relative group cursor-pointer"
+                className="w-48 md:w-64 shrink-0 rounded-2xl overflow-hidden shadow-xl shadow-pink-500/10 border border-pink-100 relative group cursor-pointer"
               >
                 <img 
                   src={manga.cover_url || 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=2070'} 
                   alt={manga.judul}
                   className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                  <span className="text-white font-bold tracking-widest text-sm bg-black/50 px-4 py-2 rounded-full border border-white/20">Lihat Penuh</span>
+                <div className="absolute inset-0 bg-white/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                  <span className="text-gray-900 font-bold tracking-widest text-sm bg-white/80 px-4 py-2 rounded-full border border-pink-200">Lihat Penuh</span>
                 </div>
               </div>
               
               <div className="flex-1 space-y-4 pb-4 flex flex-col items-center md:items-start">
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-2">
-                  <span className="px-3 py-1 bg-yellow-400 text-black text-xs font-black uppercase tracking-widest rounded-full">
+                  <span className="px-3 py-1 bg-pink-500 text-white text-xs font-black uppercase tracking-widest rounded-full">
                     {manga.target_pasar}
                   </span>
                   {manga.tema && (
-                    <span className="px-3 py-1 bg-white/10 text-gray-300 text-xs font-bold uppercase tracking-widest rounded-full border border-white/10">
+                    <span className="px-3 py-1 bg-slate-100 text-gray-600 text-xs font-bold uppercase tracking-widest rounded-full border border-slate-200">
                       {manga.tema}
                     </span>
                   )}
                 </div>
                 
-                <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight uppercase text-shadow-lg">
+                <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight uppercase text-shadow-sm">
                   {manga.judul}
                 </h1>
                 
-                <p className="text-xl md:text-2xl text-gray-200 font-medium max-w-3xl leading-relaxed border-l-4 border-yellow-400 pl-6 italic bg-white/5 py-4 px-6 rounded-r-xl shadow-lg">
+                <p className="text-xl md:text-2xl text-gray-700 font-medium max-w-3xl leading-relaxed border-l-4 border-pink-500 pl-6 italic bg-slate-50 py-4 px-6 rounded-r-xl shadow-sm">
                   {manga.logline}
                 </p>
                 
@@ -144,7 +144,7 @@ export default function MangaDetailPage() {
                       href={manga.link_publikasi}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-3 px-8 py-4 bg-yellow-400 text-black font-black text-lg tracking-widest uppercase rounded-lg hover:bg-yellow-300 transition-all hover:scale-105 shadow-[0_0_20px_rgba(250,204,21,0.3)]"
+                      className="inline-flex items-center gap-3 px-8 py-4 bg-pink-500 text-white font-black text-lg tracking-widest uppercase rounded-lg hover:bg-pink-600 transition-all hover:scale-105 shadow-[0_0_20px_rgba(236,72,153,0.3)]"
                     >
                       Baca di Webtoon
                       <ExternalLink className="w-5 h-5" />
@@ -169,10 +169,10 @@ export default function MangaDetailPage() {
                 transition={{ duration: 0.6 }}
               >
                 <div className="flex items-center gap-3 mb-6">
-                  <BookOpen className="w-6 h-6 text-yellow-400" />
-                  <h2 className="text-2xl font-black uppercase tracking-widest">Sinopsis</h2>
+                  <BookOpen className="w-6 h-6 text-pink-500" />
+                  <h2 className="text-2xl font-black uppercase tracking-widest text-gray-900">Sinopsis</h2>
                 </div>
-                <div className="space-y-6 text-lg text-gray-300 leading-relaxed font-serif bg-gray-900/40 p-8 md:p-10 rounded-3xl border border-white/5 shadow-2xl backdrop-blur-sm">
+                <div className="space-y-6 text-lg text-gray-700 leading-relaxed font-serif bg-white p-8 md:p-10 rounded-3xl border border-pink-100 shadow-lg backdrop-blur-sm">
                   {manga.sinopsis_lengkap.split('\n').map((paragraph, idx) => (
                     paragraph.trim() && <p key={idx}>{paragraph}</p>
                   ))}
@@ -188,10 +188,10 @@ export default function MangaDetailPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <div className="flex items-center gap-3 mb-6">
-                  <Globe className="w-6 h-6 text-yellow-400" />
-                  <h2 className="text-2xl font-black uppercase tracking-widest">World Building</h2>
+                  <Globe className="w-6 h-6 text-pink-500" />
+                  <h2 className="text-2xl font-black uppercase tracking-widest text-gray-900">World Building</h2>
                 </div>
-                <div className="space-y-6 text-lg text-gray-300 leading-relaxed font-serif bg-gray-900/40 p-8 md:p-10 rounded-3xl border border-white/5 shadow-2xl backdrop-blur-sm">
+                <div className="space-y-6 text-lg text-gray-700 leading-relaxed font-serif bg-white p-8 md:p-10 rounded-3xl border border-pink-100 shadow-lg backdrop-blur-sm">
                   {manga.world_building.split('\n').map((paragraph, idx) => (
                     paragraph.trim() && <p key={idx}>{paragraph}</p>
                   ))}
@@ -203,9 +203,9 @@ export default function MangaDetailPage() {
           {/* Characters Section */}
           <div className="space-y-12">
             <div className="flex flex-col items-center gap-3 text-center mb-10">
-              <Users className="w-10 h-10 text-yellow-400" />
-              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-widest">Karakter</h2>
-              <p className="text-gray-400">Kenali tokoh-tokoh dalam cerita ini.</p>
+              <Users className="w-10 h-10 text-pink-500" />
+              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-widest text-gray-900">Karakter</h2>
+              <p className="text-gray-600">Kenali tokoh-tokoh dalam cerita ini.</p>
             </div>
             
             {characters.length > 0 ? (
@@ -218,9 +218,9 @@ export default function MangaDetailPage() {
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.5, delay: i * 0.1 }}
                     onClick={() => setSelectedChar(char)}
-                    className="bg-gray-900 rounded-2xl overflow-hidden border border-white/5 hover:border-yellow-400/50 hover:shadow-[0_0_20px_rgba(250,204,21,0.15)] transition-all group cursor-pointer flex flex-col h-full"
+                    className="bg-white rounded-2xl overflow-hidden border border-pink-100 hover:border-pink-500/50 hover:shadow-[0_0_20px_rgba(236,72,153,0.15)] transition-all group cursor-pointer flex flex-col h-full shadow-sm"
                   >
-                    <div className="aspect-[3/4] relative overflow-hidden bg-black shrink-0">
+                    <div className="aspect-[3/4] relative overflow-hidden bg-slate-100 shrink-0">
                       {char.desain_visual_path ? (
                         <img 
                           src={char.desain_visual_path} 
@@ -228,23 +228,23 @@ export default function MangaDetailPage() {
                           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                         />
                       ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-gray-800 text-gray-500 font-black text-4xl">
+                        <div className="absolute inset-0 flex items-center justify-center bg-slate-200 text-gray-400 font-black text-4xl">
                           {char.nama.charAt(0)}
                         </div>
                       )}
-                      <div className="absolute top-3 left-3 px-3 py-1 bg-black/80 backdrop-blur-sm text-yellow-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-white/10">
+                      <div className="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-sm text-pink-500 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded shadow-sm border border-pink-100">
                         {char.peran}
                       </div>
                     </div>
                     <div className="p-4 flex flex-col flex-1">
-                      <h3 className="text-lg font-black text-white mb-1 group-hover:text-yellow-400 transition-colors line-clamp-1">{char.nama}</h3>
-                      <p className="text-xs text-gray-400 line-clamp-2 mt-auto">{char.jenis_kelamin || 'Rahasia'}</p>
+                      <h3 className="text-lg font-black text-gray-900 mb-1 group-hover:text-pink-500 transition-colors line-clamp-1">{char.nama}</h3>
+                      <p className="text-xs text-gray-500 line-clamp-2 mt-auto">{char.jenis_kelamin || 'Rahasia'}</p>
                     </div>
                   </motion.div>
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 italic bg-gray-900/50 p-6 rounded-2xl border border-white/5 text-center max-w-2xl mx-auto">
+              <p className="text-gray-500 italic bg-white p-6 rounded-2xl border border-pink-100 text-center max-w-2xl mx-auto shadow-sm">
                 Belum ada data karakter yang dipublikasikan.
               </p>
             )}
@@ -269,16 +269,16 @@ export default function MangaDetailPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ type: 'spring', duration: 0.5, bounce: 0.3 }}
-              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto md:overflow-hidden bg-gray-900 rounded-3xl shadow-2xl border border-white/10 custom-scrollbar flex flex-col md:flex-row items-stretch"
+              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto md:overflow-hidden bg-white rounded-3xl shadow-2xl border border-pink-100 custom-scrollbar flex flex-col md:flex-row items-stretch"
             >
               <button
                 onClick={() => setSelectedChar(null)}
-                className="absolute top-4 right-4 z-50 p-2 bg-black/50 text-gray-300 hover:text-white rounded-full hover:bg-black transition-colors backdrop-blur-sm"
+                className="absolute top-4 right-4 z-50 p-2 bg-white/50 text-gray-500 hover:text-gray-900 rounded-full hover:bg-white transition-colors backdrop-blur-sm"
               >
                 <X className="w-5 h-5" />
               </button>
               
-              <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto bg-black relative shrink-0">
+              <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto bg-slate-100 relative shrink-0">
                 {selectedChar.desain_visual_path ? (
                   <img 
                     src={selectedChar.desain_visual_path} 
@@ -286,56 +286,56 @@ export default function MangaDetailPage() {
                     className="w-full h-full md:absolute md:inset-0 object-cover object-top"
                   />
                 ) : (
-                  <div className="w-full h-full md:absolute md:inset-0 flex items-center justify-center text-gray-700 font-black text-6xl">
+                  <div className="w-full h-full md:absolute md:inset-0 flex items-center justify-center text-gray-400 font-black text-6xl">
                     {selectedChar.nama.charAt(0)}
                   </div>
                 )}
-                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 to-transparent md:hidden" />
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent md:hidden" />
               </div>
 
               <div className="p-6 md:p-8 lg:p-10 flex-1 text-left relative z-10 -mt-10 md:mt-0 space-y-8 md:overflow-y-auto custom-scrollbar">
                 <div>
-                  <span className="px-3 py-1 bg-yellow-400 text-black text-xs font-black uppercase tracking-widest rounded-sm mb-3 inline-block">
+                  <span className="px-3 py-1 bg-pink-500 text-white text-xs font-black uppercase tracking-widest rounded-sm mb-3 inline-block">
                     {selectedChar.peran}
                   </span>
-                  <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight uppercase leading-none mb-4">{selectedChar.nama}</h2>
+                  <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tight uppercase leading-none mb-4">{selectedChar.nama}</h2>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   {selectedChar.jenis_kelamin && (
-                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                    <div className="bg-slate-50 p-3 rounded-xl border border-pink-100">
                       <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Gender</span>
-                      <span className="text-white font-medium">{selectedChar.jenis_kelamin}</span>
+                      <span className="text-gray-900 font-medium">{selectedChar.jenis_kelamin}</span>
                     </div>
                   )}
                   {selectedChar.umur && (
-                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                    <div className="bg-slate-50 p-3 rounded-xl border border-pink-100">
                       <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Umur</span>
-                      <span className="text-white font-medium">{selectedChar.umur}</span>
+                      <span className="text-gray-900 font-medium">{selectedChar.umur}</span>
                     </div>
                   )}
                   {selectedChar.tinggi_badan && (
-                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                    <div className="bg-slate-50 p-3 rounded-xl border border-pink-100">
                       <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Tinggi</span>
-                      <span className="text-white font-medium">{selectedChar.tinggi_badan}</span>
+                      <span className="text-gray-900 font-medium">{selectedChar.tinggi_badan}</span>
                     </div>
                   )}
                   {selectedChar.berat_badan && (
-                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                    <div className="bg-slate-50 p-3 rounded-xl border border-pink-100">
                       <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Berat</span>
-                      <span className="text-white font-medium">{selectedChar.berat_badan}</span>
+                      <span className="text-gray-900 font-medium">{selectedChar.berat_badan}</span>
                     </div>
                   )}
                   {selectedChar.ulang_tahun && (
-                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                    <div className="bg-slate-50 p-3 rounded-xl border border-pink-100">
                       <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Ultah</span>
-                      <span className="text-white font-medium">{selectedChar.ulang_tahun}</span>
+                      <span className="text-gray-900 font-medium">{selectedChar.ulang_tahun}</span>
                     </div>
                   )}
                   {selectedChar.golongan_darah && (
-                    <div className="bg-black/30 p-3 rounded-xl border border-white/5">
+                    <div className="bg-slate-50 p-3 rounded-xl border border-pink-100">
                       <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block mb-1">Darah</span>
-                      <span className="text-white font-medium">{selectedChar.golongan_darah}</span>
+                      <span className="text-gray-900 font-medium">{selectedChar.golongan_darah}</span>
                     </div>
                   )}
                 </div>
@@ -343,68 +343,68 @@ export default function MangaDetailPage() {
                 <div className="space-y-6">
                   {selectedChar.kepribadian && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kepribadian</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kepribadian}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Kepribadian</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.kepribadian}</p>
                     </div>
                   )}
                   {selectedChar.kekuatan && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kekuatan (Power)</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kekuatan}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Kekuatan (Power)</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.kekuatan}</p>
                     </div>
                   )}
                   {selectedChar.senjata && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Senjata (Weapon)</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.senjata}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Senjata (Weapon)</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.senjata}</p>
                     </div>
                   )}
                   {selectedChar.keahlian && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Keahlian (Skill)</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.keahlian}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Keahlian (Skill)</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.keahlian}</p>
                     </div>
                   )}
                   {selectedChar.kesukaan && (
                     <div>
-                      <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-2">Kesukaan (Likes)</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kesukaan}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Kesukaan (Likes)</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.kesukaan}</p>
                     </div>
                   )}
                   {selectedChar.ketidaksukaan && (
                     <div>
-                      <h4 className="text-sm font-bold text-rose-400 uppercase tracking-widest mb-2">Ketidaksukaan (Dislikes)</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.ketidaksukaan}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Ketidaksukaan (Dislikes)</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.ketidaksukaan}</p>
                     </div>
                   )}
                   {selectedChar.kekuatan_senjata && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kemampuan & Senjata (Legacy)</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kekuatan_senjata}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Kemampuan & Senjata (Legacy)</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.kekuatan_senjata}</p>
                     </div>
                   )}
                   {selectedChar.kesukaan_ketidaksukaan && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Kesukaan / Ketidaksukaan (Legacy)</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.kesukaan_ketidaksukaan}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Kesukaan / Ketidaksukaan (Legacy)</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.kesukaan_ketidaksukaan}</p>
                     </div>
                   )}
                   {selectedChar.profil_detail && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Latar Belakang</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.profil_detail}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Latar Belakang</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.profil_detail}</p>
                     </div>
                   )}
                   {selectedChar.motivasi && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Motivasi & Tujuan</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.motivasi}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Motivasi & Tujuan</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.motivasi}</p>
                     </div>
                   )}
                   {selectedChar.penampilan && (
                     <div>
-                      <h4 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-2">Ciri Penampilan Khusus</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{selectedChar.penampilan}</p>
+                      <h4 className="text-sm font-bold text-pink-500 uppercase tracking-widest mb-2">Ciri Penampilan Khusus</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{selectedChar.penampilan}</p>
                     </div>
                   )}
                 </div>
@@ -430,7 +430,7 @@ export default function MangaDetailPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ type: 'spring', duration: 0.4 }}
-              className="relative z-10 max-w-[90vw] max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+              className="relative z-10 max-w-[90vw] max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl border border-pink-100 bg-white"
             >
               <button
                 onClick={() => setIsCoverModalOpen(false)}

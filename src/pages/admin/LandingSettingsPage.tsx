@@ -117,7 +117,7 @@ export default function LandingSettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50/50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950">
         <AdminSidebar />
         <main className="flex-1 ml-0 lg:ml-64 pt-20 flex items-center justify-center">
           <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
@@ -127,7 +127,7 @@ export default function LandingSettingsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50/50 font-sans">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 font-sans">
       <AdminSidebar />
       <main className="flex-1 ml-0 lg:ml-64 px-4 pb-4 pt-20 lg:p-10 w-full min-w-0">
         <div className="max-w-4xl mx-auto">
@@ -136,17 +136,17 @@ export default function LandingSettingsPage() {
               <LayoutTemplate className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Pengaturan Landing Page</h1>
-              <p className="text-gray-500 text-sm mt-0.5 font-medium">Sesuaikan tampilan statistik dan gambar di beranda publik.</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Pengaturan Landing Page</h1>
+              <p className="text-gray-500 dark:text-slate-400 text-sm mt-0.5 font-medium">Sesuaikan tampilan statistik dan gambar di beranda publik.</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-fit">
-            <div className="flex border-b border-gray-100 bg-gray-50/50">
+          <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden h-fit">
+            <div className="flex border-b border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950">
               <button
                 onClick={() => setActiveTab('general')}
                 className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors ${
-                  activeTab === 'general' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50'
+                  activeTab === 'general' ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 bg-white dark:bg-[#0a0a0a]' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:bg-slate-900/50'
                 }`}
               >
                 <SettingsIcon className="w-4 h-4" /> Pengaturan Umum
@@ -154,7 +154,7 @@ export default function LandingSettingsPage() {
               <button
                 onClick={() => setActiveTab('faq')}
                 className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors ${
-                  activeTab === 'faq' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50'
+                  activeTab === 'faq' ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 bg-white dark:bg-[#0a0a0a]' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:bg-slate-900/50'
                 }`}
               >
                 <HelpCircle className="w-4 h-4" /> Manajemen FAQ
@@ -162,7 +162,7 @@ export default function LandingSettingsPage() {
               <button
                 onClick={() => setActiveTab('team')}
                 className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors ${
-                  activeTab === 'team' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50'
+                  activeTab === 'team' ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 bg-white dark:bg-[#0a0a0a]' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:bg-slate-900/50'
                 }`}
               >
                 <Users className="w-4 h-4" /> Manajemen Tim
@@ -170,7 +170,7 @@ export default function LandingSettingsPage() {
               <button
                 onClick={() => setActiveTab('seo')}
                 className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors ${
-                  activeTab === 'seo' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50'
+                  activeTab === 'seo' ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 bg-white dark:bg-[#0a0a0a]' : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:bg-slate-900/50'
                 }`}
               >
                 <Globe className="w-4 h-4" /> Manajemen SEO
@@ -182,41 +182,41 @@ export default function LandingSettingsPage() {
               
               {/* Statistik Section */}
               <div>
-                <h3 className="text-md font-bold text-gray-800 mb-4 border-b pb-2">Angka Statistik</h3>
+                <h3 className="text-md font-bold text-gray-800 dark:text-slate-200 mb-4 border-b pb-2">Angka Statistik</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Total Bab (Angka)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Total Bab (Angka)</label>
                     <input
                       type="number"
                       value={totalBab}
                       onChange={(e) => setTotalBab(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a]"
                       placeholder="Contoh: 120"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Akan ditampilkan dengan akhiran "+" (Cth: 120+)</p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">Akan ditampilkan dengan akhiran "+" (Cth: 120+)</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Total Pembaca (Angka)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Total Pembaca (Angka)</label>
                     <input
                       type="number"
                       value={totalPembaca}
                       onChange={(e) => setTotalPembaca(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50/50 hover:bg-white focus:bg-white"
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all bg-gray-50 dark:bg-[#111]/50 dark:bg-slate-950 hover:bg-white dark:bg-[#0a0a0a] focus:bg-white dark:bg-[#0a0a0a]"
                       placeholder="Contoh: 50"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Akan ditampilkan dengan akhiran "k+" (Cth: 50k+)</p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">Akan ditampilkan dengan akhiran "k+" (Cth: 50k+)</p>
                   </div>
                 </div>
               </div>
 
               {/* Slider Images Section */}
               <div>
-                <h3 className="text-md font-bold text-gray-800 mb-4 border-b pb-2">Workflow Slider (Behind the Scenes)</h3>
+                <h3 className="text-md font-bold text-gray-800 dark:text-slate-200 mb-4 border-b pb-2">Workflow Slider (Behind the Scenes)</h3>
                 <div className="grid grid-cols-1 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Gambar Slider (Sketsa/Before)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">Gambar Slider (Sketsa/Before)</label>
                     <div 
-                      className="flex-1 w-full flex flex-col sm:flex-row items-center gap-4 p-4 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-indigo-400 transition-all group"
+                      className="flex-1 w-full flex flex-col sm:flex-row items-center gap-4 p-4 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-xl bg-gray-50 dark:bg-[#111] hover:bg-gray-100 dark:bg-slate-900 hover:border-indigo-400 transition-all group"
                       onDragOver={handleDragOver}
                       onDrop={(e) => {
                         e.preventDefault();
@@ -230,11 +230,11 @@ export default function LandingSettingsPage() {
                         }
                       }}
                     >
-                      <div className="w-32 h-20 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 relative group">
+                      <div className="w-32 h-20 rounded-lg bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-white/10 overflow-hidden shrink-0 relative group">
                         {beforeImageUrl ? (
                           <img src={beforeImageUrl} alt="Before" className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
+                          <div className="w-full h-full flex flex-col items-center justify-center text-gray-300 dark:text-slate-600">
                             <ImageIcon className="w-8 h-8" />
                           </div>
                         )}
@@ -249,20 +249,20 @@ export default function LandingSettingsPage() {
                         <button
                           type="button"
                           onClick={() => beforeInputRef.current?.click()}
-                          className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                          className="px-4 py-2 bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 text-gray-700 dark:text-slate-300 font-medium rounded-lg hover:bg-gray-50 dark:bg-[#111] transition-colors text-sm"
                         >
                           Upload Gambar Sketsa
                         </button>
-                        <p className="text-xs text-gray-500 mt-2">Rekomendasi rasio 16:9 (Landscape)</p>
+                        <p className="text-xs text-gray-500 dark:text-slate-400 mt-2">Rekomendasi rasio 16:9 (Landscape)</p>
                       </div>
                       <input type="file" ref={beforeInputRef} onChange={handleBeforeFileChange} accept="image/*" className="hidden" />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Gambar Slider (Final/After)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">Gambar Slider (Final/After)</label>
                     <div 
-                      className="flex-1 w-full flex flex-col sm:flex-row items-center gap-4 p-4 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-indigo-400 transition-all group"
+                      className="flex-1 w-full flex flex-col sm:flex-row items-center gap-4 p-4 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-xl bg-gray-50 dark:bg-[#111] hover:bg-gray-100 dark:bg-slate-900 hover:border-indigo-400 transition-all group"
                       onDragOver={handleDragOver}
                       onDrop={(e) => {
                         e.preventDefault();
@@ -276,11 +276,11 @@ export default function LandingSettingsPage() {
                         }
                       }}
                     >
-                      <div className="w-32 h-20 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 relative group">
+                      <div className="w-32 h-20 rounded-lg bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-white/10 overflow-hidden shrink-0 relative group">
                         {afterImageUrl ? (
                           <img src={afterImageUrl} alt="After" className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
+                          <div className="w-full h-full flex flex-col items-center justify-center text-gray-300 dark:text-slate-600">
                             <ImageIcon className="w-8 h-8" />
                           </div>
                         )}
@@ -295,11 +295,11 @@ export default function LandingSettingsPage() {
                         <button
                           type="button"
                           onClick={() => afterInputRef.current?.click()}
-                          className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                          className="px-4 py-2 bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 text-gray-700 dark:text-slate-300 font-medium rounded-lg hover:bg-gray-50 dark:bg-[#111] transition-colors text-sm"
                         >
                           Upload Gambar Final
                         </button>
-                        <p className="text-xs text-gray-500 mt-2">Rekomendasi rasio 16:9 (Landscape)</p>
+                        <p className="text-xs text-gray-500 dark:text-slate-400 mt-2">Rekomendasi rasio 16:9 (Landscape)</p>
                       </div>
                       <input type="file" ref={afterInputRef} onChange={handleAfterFileChange} accept="image/*" className="hidden" />
                     </div>

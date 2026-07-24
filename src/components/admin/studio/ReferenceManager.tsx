@@ -152,7 +152,7 @@ export function ReferenceManager({ mangaId }: ReferenceManagerProps) {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Galeri Referensi (Shiryo)</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Galeri Referensi (Shiryo)</h2>
         <button 
           onClick={openAddModal}
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 transition-colors"
@@ -164,17 +164,17 @@ export function ReferenceManager({ mangaId }: ReferenceManagerProps) {
 
       <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
         {references.map((ref) => (
-          <div key={ref.id} className="break-inside-avoid bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group">
-            <div className="bg-gray-100 relative">
+          <div key={ref.id} className="break-inside-avoid bg-white dark:bg-[#0a0a0a] rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden group">
+            <div className="bg-gray-100 dark:bg-slate-900 relative">
               {ref.foto_path ? (
                 <img src={ref.foto_path} alt={ref.kategori} className="w-full h-auto" />
               ) : (
-                <div className="w-full aspect-square flex flex-col items-center justify-center text-gray-400">
+                <div className="w-full aspect-square flex flex-col items-center justify-center text-gray-400 dark:text-slate-500">
                   <ImageIcon className="w-8 h-8 opacity-50" />
                 </div>
               )}
               <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                <button onClick={() => handleDelete(ref.id)} className="p-1.5 bg-white/90 text-red-600 rounded-md shadow-sm hover:bg-white backdrop-blur-sm">
+                <button onClick={() => handleDelete(ref.id)} className="p-1.5 bg-white dark:bg-[#0a0a0a]/90 text-red-600 rounded-md shadow-sm hover:bg-white dark:bg-[#0a0a0a] backdrop-blur-sm">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -186,7 +186,7 @@ export function ReferenceManager({ mangaId }: ReferenceManagerProps) {
             </div>
             {ref.keterangan && (
               <div className="p-4">
-                <p className="text-sm text-gray-700">{ref.keterangan}</p>
+                <p className="text-sm text-gray-700 dark:text-slate-300">{ref.keterangan}</p>
               </div>
             )}
           </div>
@@ -194,22 +194,22 @@ export function ReferenceManager({ mangaId }: ReferenceManagerProps) {
       </div>
       
       {references.length === 0 && (
-        <div className="p-12 text-center bg-white rounded-2xl border border-dashed border-gray-300 flex flex-col items-center">
-          <Library className="w-10 h-10 text-gray-300 mb-3" />
-          <p className="text-gray-500 font-medium">Galeri referensi kosong</p>
-          <button onClick={openAddModal} className="text-indigo-600 text-sm font-medium mt-2 hover:underline">Kumpulkan referensi sekarang</button>
+        <div className="p-12 text-center bg-white dark:bg-[#0a0a0a] rounded-2xl border border-dashed border-gray-300 dark:border-white/20 flex flex-col items-center">
+          <Library className="w-10 h-10 text-gray-300 dark:text-slate-600 mb-3" />
+          <p className="text-gray-500 dark:text-slate-400 font-medium">Galeri referensi kosong</p>
+          <button onClick={openAddModal} className="text-indigo-600 dark:text-indigo-400 text-sm font-medium mt-2 hover:underline">Kumpulkan referensi sekarang</button>
         </div>
       )}
 
       <Modal isOpen={isModalOpen} onClose={() => !isSubmitting && setIsModalOpen(false)} title="Tambah Referensi Shiryo">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Unggah Foto / Gambar</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Unggah Foto / Gambar</label>
             <div 
               onClick={() => fileInputRef.current?.click()}
               onDragOver={handleDragOver}
               onDrop={handleDrop}
-              className={`w-full aspect-video border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all overflow-hidden relative group ${previewUrl ? 'border-transparent bg-gray-900' : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-indigo-400'}`}
+              className={`w-full aspect-video border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all overflow-hidden relative group ${previewUrl ? 'border-transparent bg-gray-900' : 'border-gray-300 dark:border-white/20 bg-gray-50 dark:bg-[#111] hover:bg-gray-100 dark:bg-slate-900 hover:border-indigo-400'}`}
             >
               {previewUrl ? (
                 <>
@@ -220,9 +220,9 @@ export function ReferenceManager({ mangaId }: ReferenceManagerProps) {
                 </>
               ) : (
                 <div className="text-center p-6">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600 font-medium">Klik atau Drag & Drop gambar referensi</p>
-                  <p className="text-xs text-gray-500 mt-1">atau tekan <kbd className="bg-gray-200 px-1 py-0.5 rounded text-gray-700 font-mono">Ctrl+V</kbd> untuk paste</p>
+                  <Upload className="w-8 h-8 text-gray-400 dark:text-slate-500 mx-auto mb-2" />
+                  <p className="text-sm text-gray-600 dark:text-slate-400 font-medium">Klik atau Drag & Drop gambar referensi</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">atau tekan <kbd className="bg-gray-200 dark:bg-slate-800 px-1 py-0.5 rounded text-gray-700 dark:text-slate-300 font-mono">Ctrl+V</kbd> untuk paste</p>
                 </div>
               )}
             </div>
@@ -230,10 +230,10 @@ export function ReferenceManager({ mangaId }: ReferenceManagerProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Kategori</label>
             <select
               {...register('kategori')}
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
             >
               <option value="lokasi">Lokasi / Background</option>
               <option value="arsitektur">Arsitektur</option>
@@ -243,16 +243,16 @@ export function ReferenceManager({ mangaId }: ReferenceManagerProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Keterangan (Opsional)</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Keterangan (Opsional)</label>
             <textarea
               {...register('keterangan')}
               rows={3}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"
               placeholder="Catatan mengenai gambar ini..."
             />
           </div>
 
-          <div className="flex justify-end pt-4 mt-6 border-t border-gray-100">
+          <div className="flex justify-end pt-4 mt-6 border-t border-gray-100 dark:border-white/5">
             <button
               type="submit"
               disabled={isSubmitting}
